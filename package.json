@@ -1,0 +1,41 @@
+{
+  "name": "photoswiper",
+  "version": "1.0.0",
+  "description": "A jQuery plugin for easy and accessible PhotoSwipe initialization",
+  "main": "dist/photoswiper.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sh0ji/photoswiper.git"
+  },
+  "keywords": [
+    "jquery-plugin",
+    "photoswipe",
+    "accessibility",
+    "a11y"
+  ],
+  "author": "Evan Yamanishi",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/sh0ji/photoswiper/issues"
+  },
+  "homepage": "https://github.com/sh0ji/photoswiper#readme",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.0.1",
+    "eslint": "^3.1.1"
+  },
+  "browser": {
+    "PhotoSwipeUIDefault": "./node_modules/photoswipe/dist/photoswipe-ui-default.js"
+  },
+  "dependencies": {
+    "photoswipe": "^4.1.1",
+    "tabtrap": "^1.1.3"
+  }
+}
