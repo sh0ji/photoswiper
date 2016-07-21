@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Photoswiper (v1.0.1): photoswiper.js
+ * Photoswiper (v1.0.2): photoswiper.js
  * A jQuery plugin for easy and accessible PhotoSwipe initialization
  * by Evan Yamanishi
  * Licensed under GPL-3.0
@@ -19,7 +19,7 @@ const Photoswiper = (($) => {
      */
 
     const NAME               = 'photoswipe'
-    const VERSION            = '1.0.1'
+    const VERSION            = '1.0.2'
     const DATA_KEY           = 'pswp.gallery'
     const EVENT_KEY          = `.${DATA_KEY}` // .pswp.gallery
     const CLASS_KEY          = '.' + `${DATA_KEY}`.replace('.', '-') // .pswp-gallery
