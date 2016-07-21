@@ -7,7 +7,7 @@
  * --------------------------------------------------------------------------
  */
 import PhotoSwipe from 'PhotoSwipe'
-import PhotoSwipeUIDefault from 'PhotoSwipeUIDefault'
+import PhotoSwipeUI_Default from 'PhotoSwipeUI_Default'
 import 'tabtrap'
 
 const Photoswiper = (($) => {
@@ -209,7 +209,7 @@ const Photoswiper = (($) => {
                 }
             }
 
-            this._pswp = new PhotoSwipe(this._pswpEl, PhotoSwipeUIDefault, this._items, options)
+            this._pswp = new PhotoSwipe(this._pswpEl, PhotoSwipeUI_Default, this._items, options)
             this._pswp.init()
             // this._setAlt()
             this._manageFocus()

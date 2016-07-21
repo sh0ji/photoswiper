@@ -4834,7 +4834,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * --------------------------------------------------------------------------
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Photoswiper (v1.0.0): photoswiper.js
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Photoswiper (v1.0.1): photoswiper.js
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * A jQuery plugin for easy and accessible PhotoSwipe initialization
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * by Evan Yamanishi
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Licensed under GPL-3.0
@@ -4846,9 +4846,9 @@ var _PhotoSwipe = require('PhotoSwipe');
 
 var _PhotoSwipe2 = _interopRequireDefault(_PhotoSwipe);
 
-var _PhotoSwipeUIDefault = require('PhotoSwipeUIDefault');
+var _PhotoSwipeUI_Default = require('PhotoSwipeUI_Default');
 
-var _PhotoSwipeUIDefault2 = _interopRequireDefault(_PhotoSwipeUIDefault);
+var _PhotoSwipeUI_Default2 = _interopRequireDefault(_PhotoSwipeUI_Default);
 
 require('tabtrap');
 
@@ -4865,7 +4865,7 @@ var Photoswiper = function ($) {
      */
 
     var NAME = 'photoswipe';
-    var VERSION = '1.0.0';
+    var VERSION = '1.0.1';
     var DATA_KEY = 'pswp.gallery';
     var EVENT_KEY = '.' + DATA_KEY; // .pswp.gallery
     var CLASS_KEY = '.' + ('' + DATA_KEY).replace('.', '-'); // .pswp-gallery
@@ -5007,7 +5007,7 @@ var Photoswiper = function ($) {
                     }
                 }
 
-                this._pswp = new _PhotoSwipe2.default(this._pswpEl, _PhotoSwipeUIDefault2.default, this._items, options);
+                this._pswp = new _PhotoSwipe2.default(this._pswpEl, _PhotoSwipeUI_Default2.default, this._items, options);
                 this._pswp.init();
                 // this._setAlt()
                 this._manageFocus();
@@ -5222,4 +5222,4 @@ var Photoswiper = function ($) {
 
 exports.default = Photoswiper;
 
-},{"PhotoSwipe":1,"PhotoSwipeUIDefault":2,"tabtrap":3}]},{},[4]);
+},{"PhotoSwipe":1,"PhotoSwipeUI_Default":2,"tabtrap":3}]},{},[4]);

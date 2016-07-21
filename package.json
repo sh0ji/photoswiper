@@ -32,7 +32,7 @@
     "eslint": "^3.1.1"
   },
   "browser": {
-    "PhotoSwipeUIDefault": "./node_modules/photoswipe/dist/photoswipe-ui-default.js"
+    "PhotoSwipeUI_Default": "./node_modules/photoswipe/dist/photoswipe-ui-default.js"
   },
   "dependencies": {
     "photoswipe": "^4.1.1",
