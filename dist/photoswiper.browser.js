@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.photoswiper = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /*! PhotoSwipe - v4.1.1 - 2015-12-24
 * http://photoswipe.com
 * Copyright (c) 2015 Dmitry Semenov; */
@@ -3717,7 +3717,7 @@ _registerModule('History', {
 	framework.extend(self, publicMethods); };
 	return PhotoSwipe;
 });
-},{}],2:[function(require,module,exports){
+},{}],2:[function(_dereq_,module,exports){
 /*! PhotoSwipe Default UI - 4.1.1 - 2015-12-24
 * http://photoswipe.com
 * Copyright (c) 2015 Dmitry Semenov; */
@@ -4580,14 +4580,287 @@ return PhotoSwipeUI_Default;
 
 });
 
-},{}],3:[function(require,module,exports){
+},{}],3:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * --------------------------------------------------------------------------
+ * Tabtrap (v1.2.6): tabtrap.js
+ * by Evan Yamanishi
+ * Licensed under GPL-3.0
+ * --------------------------------------------------------------------------
+ */
+
+/* CONSTANTS */
+
+var NAME = 'tabtrap';
+var VERSION = '1.2.6';
+var DATA_KEY = 'tabtrap';
+
+var KEYCODE = {
+    ESCAPE: 27,
+    TAB: 9
+};
+
+var Default = {
+    disableOnEscape: false,
+    tabbableElements: ['a[href]:not([tabindex="-1"])', 'map[name] area[href]:not([tabindex="-1"])', 'input:not([disabled]):not([tabindex="-1"])', 'select:not([disabled]):not([tabindex="-1"])', 'textarea:not([disabled]):not([tabindex="-1"])', 'button:not([disabled]):not([tabindex="-1"])', 'iframe:not([tabindex="-1"])', 'object:not([tabindex="-1"])', 'embed:not([tabindex="-1"])', '[tabindex]:not([tabindex="-1"])', '[contentEditable=true]:not([tabindex="-1"])']
+};
+
+var DefaultType = {
+    disableOnEscape: 'boolean',
+    tabbableElements: 'object'
+};
+
+var Event = {
+    KEYDOWN_DISABLE: 'keydown.disable.' + DATA_KEY,
+    KEYDOWN_TAB: 'keydown.tab.' + DATA_KEY
+};
+
+var jQueryAvailable = window.jQuery !== undefined;
+
+var getNodeList = function getNodeList(selector) {
+    switch (typeof selector === 'undefined' ? 'undefined' : _typeof(selector)) {
+        case 'string':
+            return document.querySelectorAll(selector);
+            break;
+        case 'object':
+            return selector.nodeType === 1 ? selector : getNodeList(selector.selector);
+            break;
+        default:
+            throw new Error('Must provide a selector or element');
+    }
+};
+
+/* CLASS DEFINITION */
+
+var Tabtrap = function () {
+    function Tabtrap(element, config) {
+        _classCallCheck(this, Tabtrap);
+
+        this.config = this._getConfig(element, config);
+        this.element = this._assertElement(this.config.element);
+        this.enabled = true;
+        this.tabbable = this._getTabbable();
+
+        this._createEventListener();
+        if (this.config.disableOnEscape) this._setEscapeEvent();
+    }
+
+    // getters
+
+    _createClass(Tabtrap, [{
+        key: 'enable',
+
+
+        // public
+
+        value: function enable() {
+            this.enabled = true;
+        }
+    }, {
+        key: 'disable',
+        value: function disable() {
+            this.enabled = false;
+        }
+    }, {
+        key: 'toggle',
+        value: function toggle() {
+            this.enabled = !this.enabled;
+        }
+
+        // private
+
+    }, {
+        key: '_getConfig',
+        value: function _getConfig(element, config) {
+            var _config = {};
+            // check if element is actually the config object (with config.element)
+            if ((typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' && element.nodeType === undefined) {
+                _config = element;
+            } else {
+                _config.element = element;
+            }
+            return Object.assign({}, this.constructor.Default, _config);
+        }
+    }, {
+        key: '_assertElement',
+        value: function _assertElement(el) {
+            return el.nodeType === 1 ? el : typeof el === 'string' ? document.querySelector(el) : null;
+        }
+    }, {
+        key: '_getTabbable',
+        value: function _getTabbable() {
+            return this.element.querySelectorAll(this.config.tabbableElements.join(','));
+        }
+    }, {
+        key: '_getKeyCode',
+        value: function _getKeyCode(event) {
+            return event.which || event.keyCode || 0;
+        }
+    }, {
+        key: '_createEventListener',
+        value: function _createEventListener() {
+            var _this = this;
+
+            if (jQueryAvailable) {
+                jQuery(this.element).off(Event.KEYDOWN_TAB);
+                jQuery(this.element).on(Event.KEYDOWN_TAB, function (e) {
+                    return _this._manageFocus(e);
+                });
+            } else {
+                this.element.addEventListener('keydown', function (e) {
+                    return _this._manageFocus(e);
+                });
+            }
+        }
+    }, {
+        key: '_manageFocus',
+        value: function _manageFocus(e) {
+            if (this._getKeyCode(e) === KEYCODE.TAB && this.enabled) {
+                var tabIndex = Array.from(this.tabbable).indexOf(e.target);
+                var condition = {
+                    outside: tabIndex < 0,
+                    wrapForward: tabIndex === this.tabbable.length - 1 && !e.shiftKey,
+                    wrapBackward: tabIndex === 0 && e.shiftKey
+                };
+                if (condition.outside || condition.wrapForward) {
+                    e.preventDefault();
+                    this.tabbable[0].focus();
+                }
+                if (condition.wrapBackward) {
+                    e.preventDefault();
+                    this.tabbable[this.tabbable.length - 1].focus();
+                }
+            }
+        }
+    }, {
+        key: '_setEscapeEvent',
+        value: function _setEscapeEvent() {
+            var _this2 = this;
+
+            this.element.addEventListener(Event.KEYDOWN_DISABLE, function (e) {
+                if (_this2._getKeyCode(e) === KEYCODE.ESCAPE) {
+                    _this2.disable();
+                }
+            });
+        }
+
+        // static
+
+    }], [{
+        key: '_jQueryInterface',
+        value: function _jQueryInterface(config) {
+            return this.each(function () {
+                var data = jQuery(this).data(DATA_KEY);
+                var _config = (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' ? config : null;
+
+                if (!data && /disable/.test(config)) {
+                    return;
+                }
+
+                if (!data) {
+                    data = new Tabtrap(this, _config);
+                    jQuery(this).data(DATA_KEY, data);
+                }
+
+                if (typeof config === 'string') {
+                    if (data[config] === undefined) {
+                        throw new Error('No method named "' + config + '"');
+                    }
+                    data[config]();
+                }
+            });
+        }
+    }, {
+        key: 'trapAll',
+        value: function trapAll(element, config) {
+            var nodeList = getNodeList(element);
+            var _config = (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' ? config : {};
+            Array.from(nodeList).forEach(function (node) {
+                _config.element = node;
+                new Tabtrap(_config);
+            });
+        }
+    }, {
+        key: 'NAME',
+        get: function get() {
+            return NAME;
+        }
+    }, {
+        key: 'VERSION',
+        get: function get() {
+            return VERSION;
+        }
+    }, {
+        key: 'DATA_KEY',
+        get: function get() {
+            return DATA_KEY;
+        }
+    }, {
+        key: 'KEYCODE',
+        get: function get() {
+            return KEYCODE;
+        }
+    }, {
+        key: 'Default',
+        get: function get() {
+            return Default;
+        }
+    }, {
+        key: 'DefaultType',
+        get: function get() {
+            return DefaultType;
+        }
+    }, {
+        key: 'Event',
+        get: function get() {
+            return Event;
+        }
+    }, {
+        key: 'jQueryAvailable',
+        get: function get() {
+            return jQueryAvailable;
+        }
+    }]);
+
+    return Tabtrap;
+}();
+
+/* JQUERY INTERFACE INITIALIZATION */
+
+if (jQueryAvailable) {
+    (function () {
+        var JQUERY_NO_CONFLICT = jQuery.fn[NAME];
+        jQuery.fn[NAME] = Tabtrap._jQueryInterface;
+        jQuery.fn[NAME].Constructor = Tabtrap;
+        jQuery.fn[NAME].noConflict = function () {
+            jQuery.fn[NAME] = JQUERY_NO_CONFLICT;
+            return Tabtrap._jQueryInterface;
+        };
+    })();
+}
+
+exports.default = Tabtrap;
+
+},{}],4:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -4595,631 +4868,432 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /**
  * --------------------------------------------------------------------------
- * Tabtrap (v1.1.3): tabtrap.js
+ * Photoswiper (v1.1.0): photoswiper.js
  * by Evan Yamanishi
  * Licensed under GPL-3.0
  * --------------------------------------------------------------------------
  */
 
-var Tabtrap = function ($) {
+/* CONSTANTS */
 
-    /**
-     * ------------------------------------------------------------------------
-     * Constants
-     * ------------------------------------------------------------------------
-     */
+var NAME = 'photoswiper';
+var VERSION = '1.1.0';
+var DATA_KEY = 'photoswiper';
 
-    var NAME = 'tabtrap';
-    var VERSION = '1.1.3';
-    var DATA_KEY = 'a11y.tabtrap';
-    var EVENT_KEY = '.' + DATA_KEY;
-    var JQUERY_NO_CONFLICT = $.fn[NAME];
-    var ESCAPE_KEYCODE = 27;
-    var TAB_KEYCODE = 9;
+var Default = {
+    useBem: true
+};
 
-    var Default = {
-        disableOnEscape: false,
-        tabbableElements: 'a[href]:not([tabindex="-1"]), map[name] area[href]:not([tabindex="-1"]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), iframe:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"]), [contentEditable=true]:not([tabindex="-1"])'
-    };
+var Structure = {
+    PSWP: '.pswp',
+    GALLERY: 'figure',
+    TITLE: 'figcaption',
+    FIGURE: 'figure',
+    LINK: 'a',
+    THUMB: 'img',
+    CAPTION: 'figcaption'
+};
 
-    var DefaultType = {
-        disableOnEscape: 'boolean',
-        tabbableElements: 'string'
-    };
+var Deps = {
+    jQuery: window.jQuery !== undefined,
+    PhotoSwipe: PhotoSwipe !== undefined,
+    PhotoSwipeUIDefault: PhotoSwipeUI_Default !== undefined,
+    tabtrap: window.tabtrap !== undefined
+};
 
-    var Event = {
-        KEYDOWN_DISABLE: 'keydown.disable' + EVENT_KEY,
-        KEYDOWN_TAB: 'keydown.tab' + EVENT_KEY,
-        TAB_PRESS: 'tab' + EVENT_KEY
-    };
+/* CLASS DEFINITION */
 
-    /**
-     * ------------------------------------------------------------------------
-     * Class Definition
-     * ------------------------------------------------------------------------
-     */
+var Photoswiper = function () {
+    function Photoswiper(selector, config) {
+        _classCallCheck(this, Photoswiper);
 
-    var Tabtrap = function () {
-        function Tabtrap(element, config) {
-            _classCallCheck(this, Tabtrap);
+        this.config = this._getConfig(selector, config);
+        this.galleries = this._initGalleryObject(this.config.selector);
+        this.structure = this._getStructure();
+        this.hashData = this._parseHash();
 
-            this._isEnabled = true;
-            this._element = element;
-            this._jQueryUI = typeof $.ui === 'undefined' ? false : true;
-            this._config = this._getConfig(config);
-            this._$tabbable = this._getTabbable();
+        // find PhotoSwipe and the PhotoSwipe UI
+        this.PhotoSwipe = Deps.PhotoSwipe ? PhotoSwipe : this.config.photoswipe ? this.config.photoswipe : _dereq_('PhotoSwipe');
+        this.PhotoSwipeUI = Deps.PhotoSwipeUIDefault ? PhotoSwipeUI_Default : this.config.photoswipeUI ? this.config.photoswipeUI : _dereq_('PhotoSwipeUIDefault');
 
-            this._manageFocus();
-            this._setEscapeEvent();
+        if (this.hashData.pid && this.hashData.gid) {
+            this.openPhotoSwipe(this.hashData.pid, this.galleries, true);
         }
 
-        // getters
+        for (var i = 0; i < this.galleries.length; i++) {
+            this._setupGallery(i);
+        }
+    }
 
-        _createClass(Tabtrap, [{
-            key: 'enable',
+    // getters
+
+    _createClass(Photoswiper, [{
+        key: 'enable',
 
 
-            // public
+        // public
 
-            value: function enable() {
-                this._isEnabled = true;
-            }
-        }, {
-            key: 'disable',
-            value: function disable() {
-                this._isEnabled = false;
-            }
-        }, {
-            key: 'toggle',
-            value: function toggle() {
-                this._isEnabled = !this._isEnabled;
-            }
-        }, {
-            key: 'dispose',
-            value: function dispose() {
-                $.removeData(this._element, DATA_KEY);
+        value: function enable() {
+            this.enabled = true;
+        }
+    }, {
+        key: 'disable',
+        value: function disable() {
+            this.enabled = false;
+        }
+    }, {
+        key: 'toggle',
+        value: function toggle() {
+            this.enabled = !this.enabled;
+        }
+    }, {
+        key: 'openPhotoSwipe',
+        value: function openPhotoSwipe(index, galleryEl, fromURL, triggerEl) {
+            var pswpEl = document.querySelector(this.structure.PSWP);
+            var i = this._getGalleryIndex(galleryEl);
 
-                $(document).off(EVENT_KEY);
+            var items = this._getItems(galleryEl);
+            this.galleries[i].items = items;
 
-                this._isEnabled = null;
-                this._element = null;
-                this._jQueryUI = null;
-                this._config = null;
-                this._$tabbable = null;
-            }
+            var options = this._getOptions(galleryEl, items);
+            this.galleries[i].options = options;
 
-            // private
+            options.index = parseInt(index, 10);
 
-        }, {
-            key: '_getConfig',
-            value: function _getConfig(config) {
-                return $.extend({}, this.constructor.Default, $(this._element).data(), config);
-            }
-        }, {
-            key: '_getTabbable',
-            value: function _getTabbable() {
-                return this._jQueryUI ? $(this._element).find(':tabbable') : $(this._element).find(this._config.tabbableElements);
-            }
-        }, {
-            key: '_manageFocus',
-            value: function _manageFocus() {
-                var _this = this;
-
-                $(this._element).off(Event.KEYDOWN_TAB).on(Event.KEYDOWN_TAB, function (event) {
-                    if (!_this._isEnabled && !$(_this._element).is(':visible')) return true;
-                    if (event.which === TAB_KEYCODE) {
-                        $(document).trigger(Event.TAB_PRESS);
-                        var tabIndex = _this._$tabbable.index(event.target);
-                        var conditions = {
-                            outside: tabIndex < 0,
-                            wrapForward: tabIndex === _this._$tabbable.length - 1 && !event.shiftKey,
-                            wrapBackward: tabIndex === 0 && event.shiftKey
-                        };
-                        if (conditions.outside || conditions.wrapForward) {
-                            event.preventDefault();
-                            _this._$tabbable.first().focus();
-                        }
-                        if (conditions.wrapBackward) {
-                            event.preventDefault();
-                            _this._$tabbable.last().focus();
-                        }
-                    }
-                });
-            }
-        }, {
-            key: '_setEscapeEvent',
-            value: function _setEscapeEvent() {
-                var _this2 = this;
-
-                if (this._config.disableOnEscape && $(this._element).is(':visible')) {
-                    $(this._element).on(Event.KEYDOWN_DISABLE, function (event) {
-                        if (event.which === ESCAPE_KEYCODE) {
-                            _this2.disable();
-                        }
-                    });
-                }
+            if (fromURL) {
+                options.showAnimationDuration = 0;
+                options.index = this._urlIndex(index, items, options.galleryPIDs);
             }
 
-            // static
+            if (isNaN(options.index)) return;
 
-        }], [{
-            key: '_jQueryInterface',
-            value: function _jQueryInterface(config) {
-                return this.each(function () {
-                    var data = $(this).data(DATA_KEY);
-                    var _config = (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' ? config : null;
+            var pswp = new this.PhotoSwipe(pswpEl, this.PhotoSwipeUI, items, options);
+            pswp.init();
+            this._manageFocus(galleryEl, pswp, triggerEl);
 
-                    if (!data && /destroy|hide/.test(config)) {
-                        return;
-                    }
-
-                    if (!data) {
-                        data = new Tabtrap(this, _config);
-                        $(this).data(DATA_KEY, data);
-                    }
-
-                    if (typeof config === 'string') {
-                        if (data[config] === undefined) {
-                            throw new Error('No method named "' + config + '"');
-                        }
-                        data[config]();
-                    }
-                });
+            if (typeof this.config.onInit === 'function') {
+                this.config.onInit.call(pswp);
             }
-        }, {
-            key: 'VERSION',
-            get: function get() {
-                return VERSION;
-            }
-        }, {
-            key: 'Default',
-            get: function get() {
-                return Default;
-            }
-        }, {
-            key: 'NAME',
-            get: function get() {
-                return NAME;
-            }
-        }, {
-            key: 'DATA_KEY',
-            get: function get() {
-                return DATA_KEY;
-            }
-        }, {
-            key: 'Event',
-            get: function get() {
-                return Event;
-            }
-        }, {
-            key: 'EVENT_KEY',
-            get: function get() {
-                return EVENT_KEY;
-            }
-        }, {
-            key: 'DefaultType',
-            get: function get() {
-                return DefaultType;
-            }
-        }]);
-
-        return Tabtrap;
-    }();
-
-    /**
-     * ------------------------------------------------------------------------
-     * jQuery
-     * ------------------------------------------------------------------------
-     */
-
-    $.fn[NAME] = Tabtrap._jQueryInterface;
-    $.fn[NAME].Constructor = Tabtrap;
-    $.fn[NAME].noConflict = function () {
-        $.fn[NAME] = JQUERY_NO_CONFLICT;
-        return Tabtrap._jQueryInterface;
-    };
-
-    return Tabtrap;
-}(jQuery);
-
-exports.default = Tabtrap;
-},{}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * --------------------------------------------------------------------------
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Photoswiper (v1.0.2): photoswiper.js
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * A jQuery plugin for easy and accessible PhotoSwipe initialization
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * by Evan Yamanishi
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Licensed under GPL-3.0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * --------------------------------------------------------------------------
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-
-var _PhotoSwipe = require('PhotoSwipe');
-
-var _PhotoSwipe2 = _interopRequireDefault(_PhotoSwipe);
-
-var _PhotoSwipeUI_Default = require('PhotoSwipeUI_Default');
-
-var _PhotoSwipeUI_Default2 = _interopRequireDefault(_PhotoSwipeUI_Default);
-
-require('tabtrap');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Photoswiper = function ($) {
-
-    /**
-     * ------------------------------------------------------------------------
-     * Constants
-     * ------------------------------------------------------------------------
-     */
-
-    var NAME = 'photoswipe';
-    var VERSION = '1.0.2';
-    var DATA_KEY = 'pswp.gallery';
-    var EVENT_KEY = '.' + DATA_KEY; // .pswp.gallery
-    var CLASS_KEY = '.' + ('' + DATA_KEY).replace('.', '-'); // .pswp-gallery
-    var JQUERY_NO_CONFLICT = $.fn[NAME];
-
-    var Default = {
-        // use tabtrap.js dependency to handle focus accessibility
-        tabtrap: true
-    };
-
-    var Selector = {
-        PSWP: '.pswp' // root of photoswipe ui element
-    };
-
-    var Event = {
-        CLICK_THUMBNAIL: 'click.thumbnail' + EVENT_KEY
-    };
-
-    var Ignore = ['class', 'data-size', 'href', 'src'];
-
-    /**
-     * ------------------------------------------------------------------------
-     * Class Definition
-     * ------------------------------------------------------------------------
-     */
-
-    var Photoswiper = function () {
-        function Photoswiper(element, config) {
-            _classCallCheck(this, Photoswiper);
-
-            this._isEnabled = true;
-            this._element = element;
-            this._galleryIndex = parseInt($(this._element).attr('data-pswp-uid'), 10);
-            this._globalConfig = this._getConfig(config);
-            this._pswpEl = $(this._globalConfig.PSWP)[0];
-
-            if (Photoswiper.URL_HASH.pid && Photoswiper.URL_HASH.gid === this._galleryIndex) {
-                this._openFromURL();
-            }
-
-            this._setClickEvent();
         }
 
-        // getters
+        // private
 
-        _createClass(Photoswiper, [{
-            key: 'enable',
-
-
-            // public
-
-            value: function enable() {
-                this._isEnabled = true;
+    }, {
+        key: '_getConfig',
+        value: function _getConfig(selector, config) {
+            var _config = {};
+            if ((typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object') {
+                _config = config;
+            } else if ((typeof selector === 'undefined' ? 'undefined' : _typeof(selector)) === 'object' && selector.nodeType === undefined) {
+                _config = selector;
+            } else if (typeof selector === 'string') {
+                _config.selector = selector;
             }
-        }, {
-            key: 'disable',
-            value: function disable() {
-                this._isEnabled = false;
-            }
-        }, {
-            key: 'toggle',
-            value: function toggle() {
-                this._isEnabled = !this._isEnabled;
-            }
-        }, {
-            key: 'dispose',
-            value: function dispose() {
-                $.removeData(this._element, DATA_KEY);
-
-                $(document).off(EVENT_KEY);
-
-                this._isEnabled = null;
-                this._element = null;
-                this._galleryIndex = null;
-                this._globalConfig = null;
-                this._pswpEl = null;
-                this._items = null;
-                this._pswp = null;
-            }
-
-            // private
-
-        }, {
-            key: '_getConfig',
-            value: function _getConfig(config) {
-                return $.extend({}, this.constructor.Default, this._getSelectors(config), $(this._element).data(), config);
-            }
-        }, {
-            key: '_getSelectors',
-            value: function _getSelectors(config) {
-                var NAMESPACE = config === null || typeof config.namespace === 'undefined' ? CLASS_KEY : config.namespace;
-                NAMESPACE = NAMESPACE.charAt(0) !== '.' ? '.' + NAMESPACE : NAMESPACE;
-                return $.extend({}, Selector, {
-                    GALLERY: '' + NAMESPACE, // <figure>
-                    FIGURE: NAMESPACE + '__figure', // <figure>
-                    LINK: NAMESPACE + '__link', // <a>
-                    THUMB: NAMESPACE + '__thumbnail', // <img>
-                    CAPTION: NAMESPACE + '__caption' // <figcaption>
-                });
-            }
-        }, {
-            key: '_openFromURL',
-            value: function _openFromURL() {
-                var index = Photoswiper.URL_HASH.pid - 1;
-                this._openPhotoswipe(index, true);
-            }
-        }, {
-            key: '_setClickEvent',
-            value: function _setClickEvent() {
-                var _this = this;
-
-                $(this._element).on(Event.CLICK_THUMBNAIL, 'a', function (event) {
-                    var link = event.currentTarget;
-
-                    if ($(link).children('img').length !== 1) return false;
-
-                    var figure = $(link).closest(_this._globalConfig.FIGURE)[0];
-                    var index = $(_this._element).children().index(figure) - 1;
-
-                    if (index >= 0 && _this._isEnabled) {
-                        event.preventDefault();
-                        _this._openPhotoswipe(index, false);
-                    }
-                });
-            }
-        }, {
-            key: '_openPhotoswipe',
-            value: function _openPhotoswipe(index, fromURL) {
-                this._items = this._buildItems();
-                var options = this._getOptions(index);
-
-                if (fromURL) options.showAnimationDuration = 0;
-
-                if (options.galleryPIDs) {
-                    for (var i = 0; i < this._items.length; i++) {
-                        if (this._items[i].pid === index) {
-                            options.index = i;
-                        }
-                    }
-                }
-
-                this._pswp = new _PhotoSwipe2.default(this._pswpEl, _PhotoSwipeUI_Default2.default, this._items, options);
-                this._pswp.init();
-                // this._setAlt()
-                this._manageFocus();
-            }
-        }, {
-            key: '_buildItems',
-            value: function _buildItems() {
-                var items = [];
-                var $figure = $(this._element).find(this._globalConfig.FIGURE);
-
-                for (var i = 0; i < $figure.length; i++) {
-                    var item = this._getItem($figure[i]);
-                    items.push(item);
-                }
-
-                return items;
-            }
-        }, {
-            key: '_getItem',
-            value: function _getItem(figure) {
-                var link = $(figure).find(this._globalConfig.LINK)[0];
-                var thumb = $(figure).find(this._globalConfig.THUMB)[0];
-                var cap = $(figure).find(this._globalConfig.CAPTION)[0];
-
-                var size = $(link).attr('data-size').split('x');
-                var item = {
-                    w: parseInt(size[0], 10),
-                    h: parseInt(size[1], 10),
-                    src: $(link).attr('href')
+            return Object.assign({}, this.constructor.Default, _config);
+        }
+    }, {
+        key: '_initGalleryObject',
+        value: function _initGalleryObject(selector) {
+            return Array.from(this._getNodeList(this.config.selector)).map(function (gallery) {
+                return {
+                    element: gallery
                 };
+            });
+        }
+    }, {
+        key: '_getNodeList',
+        value: function _getNodeList(selector) {
+            switch (typeof selector === 'undefined' ? 'undefined' : _typeof(selector)) {
+                case 'string':
+                    return document.querySelectorAll(selector);
+                    break;
+                case 'object':
+                    return selector.nodeType === 1 ? selector : this._getNodeList(selector.selector);
+                    break;
+                default:
+                    throw new Error('Must provide a selector or element');
+            }
+        }
+    }, {
+        key: '_getGalleryIndex',
+        value: function _getGalleryIndex(galleryEl) {
+            var i = 0;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
-                var linkAts = $(link.attributes);
-                for (var i = 0; i < linkAts.length; i++) {
-                    if ($.inArray(linkAts[i].name, Ignore) === -1) {
-                        item[linkAts[i].name] = linkAts[i].value;
+            try {
+                for (var _iterator = this.galleries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var gallery = _step.value;
+
+                    if (gallery.element === galleryEl) break;
+                    i++;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
                     }
                 }
-
-                var thumbAts = $(thumb.attributes);
-                for (var _i = 0; _i < thumbAts.length; _i++) {
-                    if ($.inArray(thumbAts[_i].name, Ignore) === -1) {
-                        item[thumbAts[_i].name] = thumbAts[_i].value;
-                    }
-                }
-
-                if ($(cap).html().length > 0) {
-                    item.title = $(cap).html();
-                }
-
-                item.fig = figure;
-
-                return item;
-            }
-        }, {
-            key: '_getOptions',
-            value: function _getOptions(index) {
-                var _this2 = this;
-
-                return $.extend({}, this._globalConfig, {
-                    index: index,
-                    galleryUID: this._galleryIndex,
-                    getThumbBoundsFn: function getThumbBoundsFn(i) {
-                        var thumbnail = $(_this2._items[i].fig).find('img')[0];
-                        return {
-                            x: $(thumbnail).offset().left,
-                            y: $(thumbnail).offset().top,
-                            w: $(thumbnail).width()
-                        };
-                    }
-                });
-            }
-        }, {
-            key: '_manageFocus',
-            value: function _manageFocus() {
-                var _this3 = this;
-
-                if (this._globalConfig.tabtrap) {
-                    $(this._pswpEl).tabtrap({
-                        disableOnEscape: false
-                    });
-                    $(document).on('tab.a11y.tabtrap', $(this._pswpEl), function () {
-                        $(_this3._pswpEl).find('.pswp__ui').removeClass('pswp__ui--idle');
-                    });
-                }
-
-                this._pswp.listen('close', function () {
-                    var current = _this3._pswp.getCurrentIndex();
-                    var activeFigure = $(_this3._element).children().eq(current + 1);
-                    $(activeFigure).find(_this3._globalConfig.LINK).focus();
-                });
             }
 
-            // disabled for now
-            /* _setAlt() {
-                this._pswp.listen('beforeChange', () => {
-                    let current = this._pswp.getCurrentIndex()
-                    let altText = (this._items[current].alt) ? this._items[current].alt : ''
-                    let longDesc = (this._items[current]['data-desc']) ? this._items[current]['data-desc'] : ''
-                    let $alt = $(document.createElement('div'))
-                        .append($(document.createElement('div'))
-                            .text(altText)
-                        )
-                        .append($(document.createElement('div'))
-                            .html(longDesc)
-                        )
-                    $(this._globalConfig.DESCRIPTION).html($alt.html())
-                })
-            } */
+            return i;
+        }
+    }, {
+        key: '_getStructure',
+        value: function _getStructure() {
+            var bemSelectors = this.config.useBem ? this._bemSelectors(this.config.selector) : {};
+            return Object.assign({}, Structure, bemSelectors, this.config.selectors);
+        }
+    }, {
+        key: '_bemSelectors',
+        value: function _bemSelectors(root) {
+            return {
+                GALLERY: '' + root,
+                TITLE: root + '__title',
+                FIGURE: root + '__figure',
+                LINK: root + '__link',
+                THUMB: root + '__thumbnail',
+                CAPTION: root + '__caption'
+            };
+        }
+    }, {
+        key: '_parseHash',
+        value: function _parseHash() {
+            var hash = window.location.hash.substring(1);
+            var params = {};
 
-            // static
-
-        }], [{
-            key: '_jQueryInterface',
-            value: function _jQueryInterface(config) {
-                return this.each(function (i) {
-                    var data = $(this).data(DATA_KEY);
-                    var _config = (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' ? config : null;
-
-                    if (!data && /destroy|hide/.test(config)) {
-                        return;
-                    }
-
-                    if (!data) {
-                        $(this).attr('data-pswp-uid', i + 1);
-                        data = new Photoswiper(this, _config);
-                        $(this).data(DATA_KEY, data);
-                    }
-
-                    if (typeof config === 'string') {
-                        if (data[config] === undefined) {
-                            throw new Error('No method named "' + config + '"');
-                        }
-                        data[config]();
-                    }
-                });
-            }
-        }, {
-            key: 'VERSION',
-            get: function get() {
-                return VERSION;
-            }
-        }, {
-            key: 'Default',
-            get: function get() {
-                return Default;
-            }
-        }, {
-            key: 'NAME',
-            get: function get() {
-                return NAME;
-            }
-        }, {
-            key: 'DATA_KEY',
-            get: function get() {
-                return DATA_KEY;
-            }
-        }, {
-            key: 'Event',
-            get: function get() {
-                return Event;
-            }
-        }, {
-            key: 'EVENT_KEY',
-            get: function get() {
-                return EVENT_KEY;
-            }
-        }, {
-            key: 'URL_HASH',
-            get: function get() {
-                var hash = window.location.hash.substring(1),
-                    params = {};
-
-                if (hash.length < 5) {
-                    return params;
-                }
-
-                var vars = hash.split('&');
-                for (var i = 0; i < vars.length; i++) {
-                    if (!vars[i]) {
-                        continue;
-                    }
-                    var pair = vars[i].split('=');
-                    if (pair.length < 2) {
-                        continue;
-                    }
-                    params[pair[0]] = parseInt(pair[1], 10);
-                }
-
+            if (hash.length < 5) {
                 return params;
             }
-        }]);
 
-        return Photoswiper;
-    }();
+            var vars = hash.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                if (!vars[i]) {
+                    continue;
+                }
+                var pair = vars[i].split('=');
+                if (pair.length < 2) {
+                    continue;
+                }
+                params[pair[0]] = pair[1];
+            }
 
-    /**
-     * ------------------------------------------------------------------------
-     * jQuery
-     * ------------------------------------------------------------------------
-     */
+            if (params.gid) {
+                params.gid = parseInt(params.gid, 10);
+            }
 
-    $.fn[NAME] = Photoswiper._jQueryInterface;
-    $.fn[NAME].Constructor = Photoswiper;
-    $.fn[NAME].PhotoSwipe = _PhotoSwipe2.default;
-    $.fn[NAME].noConflict = function () {
-        $.fn[NAME] = JQUERY_NO_CONFLICT;
-        return Photoswiper._jQueryInterface;
-    };
+            return params;
+        }
+    }, {
+        key: '_setupGallery',
+        value: function _setupGallery(i) {
+            var _this = this;
+
+            this.galleries[i].element.setAttribute('data-pswp-uid', i + 1);
+            this.galleries[i].element.addEventListener('click', function (e) {
+                return _this._clickEvent(e);
+            });
+        }
+    }, {
+        key: '_clickEvent',
+        value: function _clickEvent(e) {
+            e = e || window.event;
+            var clickTarget = e.target || e.srcElement;
+
+            // only handle clicks on a>img pairs
+            if (!this._validClick(clickTarget)) return;
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+            var figure = clickTarget.closest(this.structure.FIGURE);
+            var gallery = clickTarget.closest(this.structure.GALLERY);
+            var figures = gallery.querySelectorAll(this.structure.FIGURE);
+            var index = Array.from(figures).indexOf(figure);
+
+            if (index >= 0) {
+                this.openPhotoSwipe(index, gallery, false, clickTarget);
+            }
+        }
+
+        // ensure that the click event happened on either of the two elements in a>img
+
+    }, {
+        key: '_validClick',
+        value: function _validClick(targetEl) {
+            return targetEl.nodeName === 'IMG' && targetEl.parentElement.nodeName === 'A' || targetEl.nodeName === 'A' && targetEl.querySelectorAll('img').length === 1;
+        }
+    }, {
+        key: '_getItems',
+        value: function _getItems(galleryEl) {
+            var _this2 = this;
+
+            var figures = galleryEl.querySelectorAll(this.structure.FIGURE);
+            return Array.from(figures).map(function (figure) {
+                var link = figure.querySelector(_this2.structure.LINK);
+                var thumb = figure.querySelector(_this2.structure.THUMB);
+                var cap = figure.querySelector(_this2.structure.CAPTION);
+                var size = link.getAttribute('data-size').split('x');
+
+                var item = {
+                    el: figure,
+                    h: parseInt(size[1], 10),
+                    w: parseInt(size[0], 10),
+                    src: link.getAttribute('href')
+                };
+
+                if (thumb) {
+                    item.alt = thumb.getAttribute('alt'), item.msrc = thumb.getAttribute('src');
+                }
+
+                if (cap && cap.innerHTML.length > 0) {
+                    item.title = cap.innerHTML;
+                }
+                return item;
+            });
+        }
+    }, {
+        key: '_getOptions',
+        value: function _getOptions(galleryEl, items) {
+            var thumbSelector = this.structure.THUMB;
+            return Object.assign({}, this.config.pswpOptions, {
+                galleryUID: galleryEl.getAttribute('data-pswp-uid'),
+                getThumbBoundsFn: function getThumbBoundsFn(index) {
+                    var thumb = items[index].el.querySelector(thumbSelector);
+                    var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    var rect = thumb.getBoundingClientRect();
+
+                    return {
+                        x: rect.left,
+                        y: rect.top + pageYScroll,
+                        w: rect.width
+                    };
+                }
+            });
+        }
+    }, {
+        key: '_urlIndex',
+        value: function _urlIndex(index, items, galleryPIDs) {
+            if (galleryPIDs) {
+                // parse real index when custom PIDs are used
+                // http://photoswipe.com/documentation/faq.html#custom-pid-in-url
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].pid == index) {
+                        return i;
+                    }
+                }
+            } else {
+                // in URL indexes start from 1
+                return parseInt(index, 10) - 1;
+            }
+        }
+    }, {
+        key: '_manageFocus',
+        value: function _manageFocus(galleryEl, pswp, triggerEl) {
+            var _this3 = this;
+
+            // trap focus in the pswp element (only happens when it's active)
+            var tabtrap = Deps.tabtrap ? window.tabtrap : _dereq_('tabtrap');
+            new tabtrap(this.structure.PSWP);
+
+            // return focus to the correct element on close
+            pswp.listen('close', function () {
+                var current = pswp.getCurrentIndex();
+                var currentFigure = galleryEl.querySelectorAll(_this3.structure.FIGURE)[current];
+
+                if (galleryEl.contains(triggerEl) || !triggerEl) {
+                    currentFigure.querySelector(_this3.structure.LINK).focus();
+                } else {
+                    triggerEl.focus();
+                }
+            });
+        }
+
+        // static
+
+    }], [{
+        key: '_jQueryInterface',
+        value: function _jQueryInterface(config) {
+            var _config = (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' ? config : {};
+            _config.selector = this.selector;
+
+            var pswpr = new Photoswiper(_config);
+
+            if (typeof config === 'string') {
+                if (pswper[config] === undefined) {
+                    throw new Error('No method named "' + config + '"');
+                }
+                pswper[config]();
+            }
+            return pswpr;
+        }
+    }, {
+        key: 'NAME',
+        get: function get() {
+            return NAME;
+        }
+    }, {
+        key: 'VERSION',
+        get: function get() {
+            return VERSION;
+        }
+    }, {
+        key: 'DATA_KEY',
+        get: function get() {
+            return DATA_KEY;
+        }
+    }, {
+        key: 'KEYCODE',
+        get: function get() {
+            return KEYCODE;
+        }
+    }, {
+        key: 'Default',
+        get: function get() {
+            return Default;
+        }
+    }, {
+        key: 'DefaultType',
+        get: function get() {
+            return DefaultType;
+        }
+    }, {
+        key: 'Event',
+        get: function get() {
+            return Event;
+        }
+    }, {
+        key: 'jQueryAvailable',
+        get: function get() {
+            return jQueryAvailable;
+        }
+    }]);
 
     return Photoswiper;
-}(jQuery);
+}();
+
+/* JQUERY INTERFACE INITIALIZATION */
+
+if (Deps.jQuery) {
+    (function () {
+        var JQUERY_NO_CONFLICT = jQuery.fn[NAME];
+        jQuery.fn[NAME] = Photoswiper._jQueryInterface;
+        jQuery.fn[NAME].Constructor = Photoswiper;
+        jQuery.fn[NAME].noConflict = function () {
+            jQuery.fn[NAME] = JQUERY_NO_CONFLICT;
+            return Photoswiper._jQueryInterface;
+        };
+    })();
+}
 
 exports.default = Photoswiper;
+module.exports = exports['default'];
 
-},{"PhotoSwipe":1,"PhotoSwipeUI_Default":2,"tabtrap":3}]},{},[4]);
+},{"PhotoSwipe":1,"PhotoSwipeUIDefault":2,"tabtrap":3}]},{},[4])(4)
+});
