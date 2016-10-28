@@ -1,8 +1,8 @@
 {
   "name": "photoswiper",
   "version": "1.1.0",
-  "description": "A jQuery plugin for easy and accessible PhotoSwipe initialization",
-  "main": "dist/photoswiper.js",
+  "description": "A plugin for easy and accessible PhotoSwipe initialization",
+  "main": "dist/photoswiper.module.js",
   "scripts": {
     "build-browser": "browserify src/photoswiper.js -s photoswiper -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports ] ] | derequire > dist/photoswiper.browser.js",
     "build-node": "babel src/photoswiper.js -o dist/photoswiper.module.js",
@@ -35,6 +35,7 @@
     "tabtrap": "^1.2.6"
   },
   "browser": {
-    "PhotoSwipeUIDefault": "./node_modules/photoswipe/dist/photoswipe-ui-default.js"
+    "PhotoSwipeUIDefault": "./node_modules/photoswipe/dist/photoswipe-ui-default.js",
+    "photoswiper-standalone": "dist/photoswiper.browser.js"
   }
 }
