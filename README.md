@@ -1,30 +1,86 @@
 # Photoswiper
-An ES6 jQuery plugin for easy and accessible [PhotoSwipe](http://photoswipe.com/) initialization.
+An plugin for easy and accessible [PhotoSwipe](http://photoswipe.com/) initialization. Works with or without jQuery.
 
 ## Usage
-`.photoswipe()`
-```javascript
-import $ from 'jquery'
-import 'photoswiper'
+Photoswiper comes with two versions: a module version that can be required and a standalone version that can be used in the browser. The easiest way to initialize Photoswiper is with jQuery or the `.initAll()` method.
 
-$(() => {
-  $('.pswp-gallery').photoswipe()
-})
+With jQuery `$(selector).photoswiper([options])`
+```javascript
+$('.pswp-gallery').photoswipe()
 ```
-PhotoSwipe and PhotoSwipeUI_Default are both included in the Photoswiper class, so you don't need to add them as a dependency to your project. The PhotoSwipe class is attached to Photoswiper, and can be referenced with `$.fn.photoswipe.PhotoSwipe`.
+
+Without jQuery `photoswiper.initAll(selector[, options])`
+```javascript
+photoswiper.initAll('.pswp-gallery')
+```
+It can also be initialized without jQuery or `.initAll()`, but with one significant difference: the supplied element must be an actual element (`nodeType === 1`).
+
+`photoswiper(element[, options])`
+```javascript
+// initialize one gallery
+let myGallery = document.querySelector('.pswp-gallery')
+photoswiper('.pswp-gallery')
+
+// initialize all the galleries
+let myGalleries = document.querySelectorAll('.pswp-gallery')
+for (let gallery of myGalleries) {
+    photoswiper(gallery)
+}
+```
+
+## Options
+Photoswiper provides a few extra options in addition to [all the PhotoSwipe options](http://photoswipe.com/documentation/options.html).
+
+| Option | Type | Default |
+| ---- | ---- | ---- |
+| `bemRoot` | `string` | `null` |
+| `el` | `string` or `object` | `null` |
+| `onInit` | `function` | `null` |
+| `PhotoSwipeUI` | `object` | The [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js). |
+| `structure` | `object` | See the [Structure](#structure) documentation. |
+
+* `bemRoot`
+Use this to customize your selectors according to BEM [BEM](https://css-tricks.com/bem-101/). For instance, passing `myImages` would cause the figure element selector to become `.myImages__figure` instead of `.pswp-gallery__figure`.
+
+* `el`
+Use this if you'd rather supply the element inside the config. It can be a valid CSS selector string, a direct reference to an element (e.g. `document.getElementById('myGallery')`), or a node list that you already created (e.g. `document.querySelectorAll('.pswp-gallery')`).
+```javascript
+photoswiper.initAll({ el: '.pswp-gallery' })
+```
+* `onInit`
+This will be called with the PhotoSwipe instance context when the gallery is initialized. Use it to bind additional [PhotoSwipe API functions](http://photoswipe.com/documentation/api.html). Access the PhotoSwipe instance with either `this` or the first argument `(arg) => {}`.
+```javascript
+{
+    onInit: function(pswp) {
+        // (this === pswp == PhotoSwipe instance)
+        this.listen('afterChange', () => {
+            alert('The image changed! But you probably knew that already...')
+        })
+    }
+}
+```
+* `photoswipeUI`
+Specify your PhotoSwipe ui object here. Defaults to the [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js), so you don't need to supply that.
+
+* `structure`
+Specify selectors for the structure of your gallery.
 
 ## Structure
-Photoswiper uses [BEM](https://css-tricks.com/bem-101/) CSS selectors to target the different elements of the image gallery.
+Photoswiper defaults to semantic element selectors, but all selectors can be explicitly overriden. Optionally use [BEM](https://css-tricks.com/bem-101/) by supplying a `bemRoot` class name in the options (e.g. `{ bemRoot: 'pswp-gallery'}`).
 Elements include:
-* `.pswp-gallery` The root gallery element. Change this by passing a `namespace` value on initialization, and all the following elements will change as well.
-* `.pswp-gallery__title` The title of the whole gallery (this should be a direct child of `.pswp-gallery`.
-* `.pswp-gallery__figure` The figure container
-* `.pswp-gallery__link` The anchor element that contains the full resolution image
-* `.pswp-gallery__thumbnail` The img thumbnail
-* `.pswp-gallery__caption` Captions for each image
-* `.pswp` The [PhotoSwipe element](http://photoswipe.com/documentation/getting-started.html).
+
+| Option Name | Default | BEM Output | Description |
+| ---- | ---- | ---- | ---- |
+| **GALLERY** | `figure` | `.${bemRoot}` | The root gallery element. |
+| **TITLE** | `figcaption` | `.${bemRoot}__title` | The title of the whole gallery. There can only be one of these per gallery, and it must be a direct child of the **GALLERY**. |
+| **FIGURE** | `figure` | `.${bemRoot}__figure` | The figure container |
+| **LINK** | `a` | `.${bemRoot}__link` | The anchor element that contains the full resolution image. |
+| **THUMB** | `img` | `.${bemRoot}__thumbnail` | The img thumbnail. |
+| **CAPTION** | `figcaption` | `.${bemRoot}__caption` | Captions for each image. |
+| **PSWP** | `.pswp` | N/A | The [PhotoSwipe element](http://photoswipe.com/documentation/getting-started.html). |
 
 ### Example
+`{ bemRoot: 'pswp-gallery' }`
 ```html
 <figure class="pswp-gallery">
   <figcaption class="pswp-gallery__title">Kittens</figcaption>
@@ -37,52 +93,51 @@ Elements include:
 </figure>
 ```
 
-## Options
-Photoswiper provides a couple extra options in addition to [all the PhotoSwipe options](http://photoswipe.com/documentation/options.html).
-
-| Option | Type | Default |
-| ------ | ---- | ------- |
-| `namespace` | `string` | `pswp-gallery` |
-| `tabtrap` | `boolean` | `true` |
-
-`namespace`
-Use this to customize your selectors. For instance, passing `myImages` would cause the figure element selctor to become `.myImages__figure` instead of `.pswp-gallery__figure`.
-
-`tabtrap` The [tabtrap](https://github.com/sh0ji/tabtrap) dependency improves accessibility by ensuring that keyboard users can't tab through tabbable elements outside of the PhotoSwipe modal. Set to `false` to disable it (not recommended).
-
 
 ## Methods
 
-`.photoswipe(options)`
+`$.photoswiper(options)` or
 ```javascript
-$('.pswp-gallery').photoswipe({
-  history: 'false',         // PhotoSwipe option
-  namespace: 'my-gallery'   // Photoswiper option
+// jQuery
+$('.pswp-gallery').photoswiper({
+    history: 'false',       // PhotoSwipe option
+    bgOpacity: .7,          // PhotoSwipe option
+    structure: {
+        FIGURE: '.myFigure' // Override default
+    }
+})
+
+// Create a new class without jQuery
+let myGallery = document.getElementById('myGallery')
+let pswpr = new photoswiper({
+    el: myGallery,          // Must be a single element
+    bemRoot: 'pswp-gallery'
 })
 ```
 
-`.photoswipe('enable')`
+`enable()`
 ```javascript
-$('#enable-pswp').on('click', (e) => {
-  $('.pswp-gallery').photoswipe('enable')
-})
+// jQuery
+$('.pswp-gallery').photoswiper('enable')
+
+// no jQuery (the class has already been initialized)
+pswpr.enable()
 ```
 
-`.photoswipe('disable')`
+`.photoswiper('disable')`
 ```javascript
-$('#disable-pswp').on('click', (e) => {
-  $('.pswp-gallery').photoswipe('disable')
-})
+// jQuery
+$('.pswp-gallery').photoswiper('disable')
+
+// no jQuery (the class has already been initialized)
+pswpr.disable()
 ```
 
-`.photoswipe('toggle')`
+`.photoswiper('toggle')`
 ```javascript
-$(document).on('keydown', (e) => {
-  if (e.which === 84) {     // 't'
-    $('.pswp-gallery').photoswipe('toggle')
-  }
-})
-```
+// jQuery
+$('.pswp-gallery').photoswiper('toggle')
 
-## Credit
-A great deal of the ES6 structure was borrowed from [Bootstrap 4's plugin patterns](https://github.com/twbs/bootstrap/tree/v4-dev/js/src).
+// no jQuery (the class has already been initialized)
+pswpr.toggle()
+```
