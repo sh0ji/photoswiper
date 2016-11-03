@@ -1,6 +1,6 @@
 {
   "name": "photoswiper",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
   "main": "dist/photoswiper.module.js",
   "scripts": {
