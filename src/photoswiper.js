@@ -216,15 +216,18 @@ class Photoswiper {
         e = e || window.event
         let clickTarget = e.target || e.srcElement
 
+        // handle clicks referencing a photoswipe-able image
         let ref = clickTarget.getAttribute('href')
         if (ref) {
             let hashData = this._parseHash(ref.split('#')[1])
             if (hashData.pid && hashData.gid) {
                 this._openPhotoSwipe(hashData.pid, this.element, false, clickTarget)
+                e.preventDefault ? e.preventDefault() : e.returnValue = false
                 return
             }
         }
 
+        // handle clicks on either the anchor or img
         if (!this._validClick(clickTarget) || !this.enabled) return
         e.preventDefault ? e.preventDefault() : e.returnValue = false
 
