@@ -1,13 +1,11 @@
-/**
- * --------------------------------------------------------------------------
+/* --------------------------------------------------------------------------
  * Photoswiper (v2.0.3): photoswiper.js
  * by Evan Yamanishi
  * Licensed under GPL-3.0
- * --------------------------------------------------------------------------
- */
+ * -------------------------------------------------------------------------- */
 
 import PhotoSwipe from 'photoswipe'
-import PhotoSwipeUIDefault from '../node_modules/photoswipe/dist/photoswipe-ui-default.js'
+import PhotoSwipeUIDefault from '../default-ui/photoswipe-ui-default.js'
 import tabtrap from 'tabtrap'
 
 /* CONSTANTS */
