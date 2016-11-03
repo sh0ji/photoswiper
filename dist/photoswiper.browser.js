@@ -4864,7 +4864,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
                                                                                                                                                                                                                                                                                * --------------------------------------------------------------------------
-                                                                                                                                                                                                                                                                               * Photoswiper (v2.0.2): photoswiper.js
+                                                                                                                                                                                                                                                                               * Photoswiper (v2.0.3): photoswiper.js
                                                                                                                                                                                                                                                                                * by Evan Yamanishi
                                                                                                                                                                                                                                                                                * Licensed under GPL-3.0
                                                                                                                                                                                                                                                                                * --------------------------------------------------------------------------
@@ -4889,7 +4889,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /* CONSTANTS */
 
 var NAME = 'photoswiper';
-var VERSION = '2.0.2';
+var VERSION = '2.0.3';
 var DATA_KEY = 'photoswiper';
 
 var Default = {

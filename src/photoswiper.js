@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Photoswiper (v2.0.2): photoswiper.js
+ * Photoswiper (v2.0.3): photoswiper.js
  * by Evan Yamanishi
  * Licensed under GPL-3.0
  * --------------------------------------------------------------------------
@@ -13,7 +13,7 @@ import tabtrap from 'tabtrap'
 /* CONSTANTS */
 
 const NAME = 'photoswiper'
-const VERSION = '2.0.2'
+const VERSION = '2.0.3'
 const DATA_KEY = 'photoswiper'
 
 const Default = {
