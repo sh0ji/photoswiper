@@ -295,15 +295,18 @@ var Photoswiper = function () {
             e = e || window.event;
             var clickTarget = e.target || e.srcElement;
 
+            // handle clicks referencing a photoswipe-able image
             var ref = clickTarget.getAttribute('href');
             if (ref) {
                 var hashData = this._parseHash(ref.split('#')[1]);
                 if (hashData.pid && hashData.gid) {
                     this._openPhotoSwipe(hashData.pid, this.element, false, clickTarget);
+                    e.preventDefault ? e.preventDefault() : e.returnValue = false;
                     return;
                 }
             }
 
+            // handle clicks on either the anchor or img
             if (!this._validClick(clickTarget) || !this.enabled) return;
             e.preventDefault ? e.preventDefault() : e.returnValue = false;
 

@@ -2,11 +2,12 @@
   "name": "photoswiper",
   "version": "2.0.1",
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
-  "main": "dist/photoswiper.module.js",
+  "main": "dist/photoswiper.bundle.js",
   "scripts": {
     "build-browser": "browserify src/photoswiper.js -s photoswiper -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports ] ] | derequire > dist/photoswiper.browser.js",
+    "build-bundle": "browserify src/photoswiper.js -o dist/photoswiper.bundle.js -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports ] ]",
     "build-node": "babel src/photoswiper.js -o dist/photoswiper.module.js",
-    "prepublish": "npm run build-browser & npm run build-node"
+    "prepublish": "npm run build-browser & npm run build-bundle & npm run build-node"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
   },
   "browser": {
     "PhotoSwipeUIDefault": "./node_modules/photoswipe/dist/photoswipe-ui-default.js",
-    "photoswiper-standalone": "dist/photoswiper.browser.js"
+    "photoswiper-standalone": "dist/photoswiper.browser.js",
+    "photoswiper-module": "dist/photoswiper.module.js"
   }
 }
