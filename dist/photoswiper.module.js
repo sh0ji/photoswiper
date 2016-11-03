@@ -18,9 +18,9 @@ var _photoswipe = require('photoswipe');
 
 var _photoswipe2 = _interopRequireDefault(_photoswipe);
 
-var _PhotoSwipeUIDefault = require('PhotoSwipeUIDefault');
+var _photoswipeUiDefault = require('../node_modules/photoswipe/dist/photoswipe-ui-default.js');
 
-var _PhotoSwipeUIDefault2 = _interopRequireDefault(_PhotoSwipeUIDefault);
+var _photoswipeUiDefault2 = _interopRequireDefault(_photoswipeUiDefault);
 
 var _tabtrap = require('tabtrap');
 
@@ -40,7 +40,7 @@ var Default = {
     bemRoot: null,
     el: null,
     onInit: null,
-    photoswipeUI: _PhotoSwipeUIDefault2.default,
+    photoswipeUI: _photoswipeUiDefault2.default,
     structure: {
         PSWP: '.pswp',
         GALLERY: 'figure',

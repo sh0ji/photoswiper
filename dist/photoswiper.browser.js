@@ -4874,9 +4874,9 @@ var _photoswipe = _dereq_('photoswipe');
 
 var _photoswipe2 = _interopRequireDefault(_photoswipe);
 
-var _PhotoSwipeUIDefault = _dereq_('PhotoSwipeUIDefault');
+var _photoswipeUiDefault = _dereq_('../node_modules/photoswipe/dist/photoswipe-ui-default.js');
 
-var _PhotoSwipeUIDefault2 = _interopRequireDefault(_PhotoSwipeUIDefault);
+var _photoswipeUiDefault2 = _interopRequireDefault(_photoswipeUiDefault);
 
 var _tabtrap = _dereq_('tabtrap');
 
@@ -4896,7 +4896,7 @@ var Default = {
     bemRoot: null,
     el: null,
     onInit: null,
-    photoswipeUI: _PhotoSwipeUIDefault2.default,
+    photoswipeUI: _photoswipeUiDefault2.default,
     structure: {
         PSWP: '.pswp',
         GALLERY: 'figure',
@@ -5431,5 +5431,5 @@ if (window.jQuery !== undefined) {
 exports.default = Photoswiper;
 module.exports = exports['default'];
 
-},{"PhotoSwipeUIDefault":1,"photoswipe":2,"tabtrap":3}]},{},[4])(4)
+},{"../node_modules/photoswipe/dist/photoswipe-ui-default.js":1,"photoswipe":2,"tabtrap":3}]},{},[4])(4)
 });

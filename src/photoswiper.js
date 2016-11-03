@@ -7,7 +7,7 @@
  */
 
 import PhotoSwipe from 'photoswipe'
-import PhotoSwipeUIDefault from 'PhotoSwipeUIDefault'
+import PhotoSwipeUIDefault from '../node_modules/photoswipe/dist/photoswipe-ui-default.js'
 import tabtrap from 'tabtrap'
 
 /* CONSTANTS */
