@@ -19,7 +19,7 @@ It can also be initialized without jQuery or `.initAll()`, but with one signific
 ```javascript
 // initialize one gallery
 let myGallery = document.querySelector('.pswp-gallery')
-photoswiper('.pswp-gallery')
+photoswiper(myGallery)
 
 // initialize all the galleries
 let myGalleries = document.querySelectorAll('.pswp-gallery')
@@ -124,7 +124,7 @@ $('.pswp-gallery').photoswiper('enable')
 pswpr.enable()
 ```
 
-`.photoswiper('disable')`
+`disable()`
 ```javascript
 // jQuery
 $('.pswp-gallery').photoswiper('disable')
@@ -133,7 +133,7 @@ $('.pswp-gallery').photoswiper('disable')
 pswpr.disable()
 ```
 
-`.photoswiper('toggle')`
+`toggle()`
 ```javascript
 // jQuery
 $('.pswp-gallery').photoswiper('toggle')
