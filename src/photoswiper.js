@@ -98,7 +98,7 @@ class Photoswiper {
 
             this._initListeners()
         } else {
-            console.warn('Gallery figures must contain an anchor > image pair (a[href]>img[src]).\n', element)
+            console.warn('Gallery figures must contain an anchor > image pair (a[href|data-href]>img[src]).\n', element)
         }
     }
 
@@ -204,7 +204,7 @@ class Photoswiper {
 
     _initListeners() {
         this.element.addEventListener('click', (e) => this._clickEvent(e))
-        let pageAnchors = document.querySelectorAll('a[href^="#"]')
+        let pageAnchors = document.querySelectorAll('a[href^="#"],a[data-href^="#"]')
         for (let anchor of pageAnchors) {
             anchor.addEventListener('click', (e) => this._clickEvent(e))
         }
@@ -215,7 +215,7 @@ class Photoswiper {
         let clickTarget = e.target || e.srcElement
 
         // handle clicks referencing a photoswipe-able image
-        let ref = clickTarget.getAttribute('href')
+        let ref = clickTarget.getAttribute('href') || clickTarget.getAttribute('data-href')
         if (ref) {
             let hashData = this._parseHash(ref.split('#')[1])
             if (hashData.pid && hashData.gid) {
@@ -244,7 +244,7 @@ class Photoswiper {
         }
     }
 
-    // ensure that the click event happened on either of the two elements in a[href]>img[src] relationship
+    // ensure that the click event happened on either of the two elements in a[href|data-href]>img[src] relationship
     _validClick(targetEl) {
         return (targetEl.nodeName == 'img' && targetEl.parentElement.nodeName == 'a') || (targetEl.nodeName == 'a' && targetEl.querySelectorAll('img').length === 1)
     }
@@ -302,7 +302,7 @@ class Photoswiper {
             el: figure,
             h: parseInt(size[1], 10),
             w: parseInt(size[0], 10),
-            src: link.getAttribute('href')
+            src: link.getAttribute('href') || link.getAttribute('data-href')
         }
 
         if (thumb) {

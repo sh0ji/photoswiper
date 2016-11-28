@@ -139,7 +139,7 @@ var Photoswiper = function () {
 
             this._initListeners();
         } else {
-            console.warn('Gallery figures must contain an anchor > image pair (a[href]>img[src]).\n', element);
+            console.warn('Gallery figures must contain an anchor > image pair (a[href|data-href]>img[src]).\n', element);
         }
     }
 
@@ -259,7 +259,7 @@ var Photoswiper = function () {
             this.element.addEventListener('click', function (e) {
                 return _this._clickEvent(e);
             });
-            var pageAnchors = document.querySelectorAll('a[href^="#"]');
+            var pageAnchors = document.querySelectorAll('a[href^="#"],a[data-href^="#"]');
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
@@ -294,7 +294,7 @@ var Photoswiper = function () {
             var clickTarget = e.target || e.srcElement;
 
             // handle clicks referencing a photoswipe-able image
-            var ref = clickTarget.getAttribute('href');
+            var ref = clickTarget.getAttribute('href') || clickTarget.getAttribute('data-href');
             if (ref) {
                 var hashData = this._parseHash(ref.split('#')[1]);
                 if (hashData.pid && hashData.gid) {
@@ -323,7 +323,7 @@ var Photoswiper = function () {
             }
         }
 
-        // ensure that the click event happened on either of the two elements in a[href]>img[src] relationship
+        // ensure that the click event happened on either of the two elements in a[href|data-href]>img[src] relationship
 
     }, {
         key: '_validClick',
@@ -389,7 +389,7 @@ var Photoswiper = function () {
                 el: figure,
                 h: parseInt(size[1], 10),
                 w: parseInt(size[0], 10),
-                src: link.getAttribute('href')
+                src: link.getAttribute('href') || link.getAttribute('data-href')
             };
 
             if (thumb) {
