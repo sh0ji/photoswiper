@@ -246,7 +246,7 @@ class Photoswiper {
 
     // ensure that the click event happened on either of the two elements in a[href|data-href]>img[src] relationship
     _validClick(targetEl) {
-        return (targetEl.nodeName == 'img' && targetEl.parentElement.nodeName == 'a') || (targetEl.nodeName == 'a' && targetEl.querySelectorAll('img').length === 1)
+        return (targetEl.nodeName === 'IMG' && targetEl.parentElement.nodeName === 'A') || (targetEl.nodeName === 'A' && targetEl.querySelectorAll('img').length === 1)
     }
 
     _openPhotoSwipe(index, galleryEl, fromURL, triggerEl) {

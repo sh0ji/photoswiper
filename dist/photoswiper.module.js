@@ -328,7 +328,7 @@ var Photoswiper = function () {
     }, {
         key: '_validClick',
         value: function _validClick(targetEl) {
-            return targetEl.nodeName == 'img' && targetEl.parentElement.nodeName == 'a' || targetEl.nodeName == 'a' && targetEl.querySelectorAll('img').length === 1;
+            return targetEl.nodeName === 'IMG' && targetEl.parentElement.nodeName === 'A' || targetEl.nodeName === 'A' && targetEl.querySelectorAll('img').length === 1;
         }
     }, {
         key: '_openPhotoSwipe',
