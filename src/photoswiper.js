@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
- * Photoswiper (v2.0.6): photoswiper.js
+ * Photoswiper (v2.0.7): photoswiper.js
  * by Evan Yamanishi
  * Licensed under GPL-3.0
  * -------------------------------------------------------------------------- */
@@ -11,7 +11,7 @@ import tabtrap from 'tabtrap'
 /* CONSTANTS */
 
 const NAME = 'photoswiper'
-const VERSION = '2.0.6'
+const VERSION = '2.0.7'
 const DATA_KEY = 'photoswiper'
 
 const Default = {
@@ -246,7 +246,10 @@ class Photoswiper {
 
     // ensure that the click event happened on either of the two elements in a[href|data-href]>img[src] relationship
     _validClick(targetEl) {
-        return (targetEl.nodeName === 'IMG' && targetEl.parentElement.nodeName === 'A') || (targetEl.nodeName === 'A' && targetEl.querySelectorAll('img').length === 1)
+        const nodeName = targetEl.nodeName.toUpperCase()
+        const parentName = targetEl.parentElement.nodeName.toUpperCase()
+        const hasImg = targetEl.querySelectorAll('img').length === 1
+        return (nodeName === 'IMG' && parentName === 'A') || (nodeName === 'A' && hasImg)
     }
 
     _openPhotoSwipe(index, galleryEl, fromURL, triggerEl) {
