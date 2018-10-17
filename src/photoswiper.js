@@ -4,9 +4,9 @@
  * Licensed under GPL-3.0
  * -------------------------------------------------------------------------- */
 
-import PhotoSwipe from 'photoswipe'
-import PhotoSwipeUIDefault from '../default-ui/photoswipe-ui-default.js'
-import tabtrap from 'tabtrap'
+import PhotoSwipe from 'photoswipe';
+import tabtrap from 'tabtrap';
+import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
 
 /* CONSTANTS */
 

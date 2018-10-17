@@ -4,10 +4,10 @@
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
   "main": "dist/photoswiper.module.js",
   "scripts": {
-    "copy-ui": "cp node_modules/photoswipe/dist/photoswipe-ui-default.js default-ui/",
-    "browser": "browserify src/photoswiper.js -s photoswiper -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports ] ] | derequire > dist/photoswiper.browser.js",
-    "module": "babel src/photoswiper.js -o dist/photoswiper.module.js",
-    "build": "npm run copy-ui && npm run browser & npm run module",
+    "build:browser": "browserify src/photoswiper.js -s photoswiper -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports ] ] | derequire > dist/photoswiper.browser.js",
+    "build:module": "babel src/photoswiper.js -o dist/photoswiper.module.js",
+    "build": "npm run build:browser & npm run build:module",
+    "lint": "eslint src",
     "prepublish": "npm run build"
   },
   "repository": {
