@@ -2,12 +2,9 @@
   "name": "photoswiper",
   "version": "2.0.7",
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
-  "main": "dist/photoswiper.module.js",
+  "main": "dist/photoswiper.js",
   "scripts": {
-    "build:browser": "parcel build src/photoswiper.js --global Photoswiper --out-file photoswiper.browser.js",
-    "build:module": "parcel build src/photoswiper.js --target node --out-file photoswiper.module.js",
-    "build": "npm run build:browser & npm run build:module",
-    "dev": "parcel watch ./src/photoswiper.js --global Photoswiper --out-file photoswiper.browser.js",
+    "build": "parcel build src/photoswiper.js",
     "lint": "eslint src",
     "prebuild": "rm -rf dist"
   },
