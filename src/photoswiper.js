@@ -127,24 +127,7 @@ export default class Photoswiper {
 			config);
 	}
 
-	_getStructure() {
-		const bemSelectors = (this.config.bemRoot) ? this._bemSelectors(this.config.bemRoot) : {};
-		return Object.assign({},
-			this.config.structure,
-			bemSelectors);
-	}
-
-
-	_getPswpOptions() {
-		const opts = {};
-		for (const opt of Object.keys(this.config)) {
-			if (Default[opt] === undefined) {
-				opts[opt] = this.config[opt];
-				delete this.config[opt];
 			}
-		}
-		return opts;
-	}
 
 	_initListeners() {
 		this.element.addEventListener('click', e => this._clickEvent(e));
@@ -188,14 +171,6 @@ export default class Photoswiper {
 		}
 	}
 
-	// ensure that the click event happened on either of the two elements in a[href|data-href]>img[src] relationship
-	_validClick(targetEl) {
-		const nodeName = targetEl.nodeName.toUpperCase();
-		const parentName = targetEl.parentElement.nodeName.toUpperCase();
-		const hasImg = targetEl.querySelectorAll('img').length === 1;
-		return (nodeName === 'IMG' && parentName === 'A') || (nodeName === 'A' && hasImg);
-	}
-
 	_openPhotoSwipe(index, galleryEl, fromURL, triggerEl) {
 		if (!isValidPswp(galleryEl)) return;
 		const pswpEl = document.querySelector(this.structure.PSWP);
@@ -225,12 +200,6 @@ export default class Photoswiper {
 		}
 	}
 
-	_getItems(galleryEl) {
-		const figures = galleryEl.querySelectorAll(this.structure.FIGURE);
-		if (figures.length > 0) {
-			return Array.from(figures).map(figure => this._getItem(figure));
-		}
-		return [this._getItem(galleryEl)];
 	}
 
 	_getItem(figure) {
@@ -259,26 +228,6 @@ export default class Photoswiper {
 		}
 		return item;
 	}
-
-	_getOptions(galleryEl) {
-		const thumbSelector = this.structure.THUMB;
-		return Object.assign({},
-			this.pswpOptions, {
-				galleryUID: galleryEl.getAttribute('data-pswp-uid'),
-				getThumbBoundsFn: (index) => {
-					const thumb = this.items[index].el.querySelector(thumbSelector);
-					const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-					const rect = thumb.getBoundingClientRect();
-
-					return {
-						x: rect.left,
-						y: rect.top + pageYScroll,
-						w: rect.width,
-					};
-				},
-			});
-	}
-
 	// a few helpers for keyboard accessibility
 	_manageFocus(pswp, triggerEl, pswpEl) {
 		// trap focus in the pswp element when it's active
