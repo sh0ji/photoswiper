@@ -103,6 +103,11 @@ export default class Photoswiper {
 		return (gid) ? parseInt(gid, 10) : undefined;
 	}
 
+	get pswpEl() {
+		return document.querySelector(this.selectors.PSWP)
+			|| new Error('Make sure to include the .pswp galleryElement on your page');
+	}
+
 	get pswpOptions() {
 		const {
 			bemRoot,
