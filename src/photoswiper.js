@@ -119,7 +119,6 @@ export default class Photoswiper {
 	}
 
 
-	// private
 
 	_getConfig(config) {
 		return Object.assign({},
@@ -129,45 +128,10 @@ export default class Photoswiper {
 
 			}
 
-	_initListeners() {
-		this.element.addEventListener('click', e => this._clickEvent(e));
-		const pageAnchors = document.querySelectorAll('a[href^="#"],a[data-href^="#"]');
-		for (const anchor of pageAnchors) {
-			anchor.addEventListener('click', e => this._clickEvent(e));
-		}
-	}
 
-	_clickEvent(e) {
-		e = e || window.event;
-		const clickTarget = e.target || e.srcElement;
 
-		// handle clicks referencing a photoswipe-able image
-		const ref = clickTarget.getAttribute('href') || clickTarget.getAttribute('data-href');
-		if (ref) {
-			const hashData = this._parseHash(ref.split('#')[1]);
-			if (hashData.pid && hashData.gid) {
-				this._openPhotoSwipe(hashData.pid, this.element, false, clickTarget);
-				e.preventDefault ? e.preventDefault() : e.returnValue = false;
-				return;
-			}
-		}
 
-		// handle clicks on either the anchor or img
-		if (!this._validClick(clickTarget) || !this.enabled) return;
-		e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
-		const figure = clickTarget.closest(this.structure.FIGURE) || this.element;
-		let index = null;
-
-		if (figure === this.element) {
-			index = 0;
-		} else {
-			const figures = this.element.querySelectorAll(this.structure.FIGURE);
-			index = Array.from(figures).indexOf(figure);
-		}
-
-		if (index >= 0) {
-			this._openPhotoSwipe(index, this.element, false, clickTarget);
 		}
 	}
 
@@ -198,17 +162,29 @@ export default class Photoswiper {
 		if (typeof this.config.onInit === 'function') {
 			this.config.onInit.call(pswp, pswp);
 		}
+	initListeners() {
+		this.figures.forEach((figure) => {
+			figure.querySelector(this.selectors.LINK)
+				.addEventListener('click', this.onClick);
+		});
 	}
 
+	clickHandler(e = window.event) {
+		e.preventDefault();
+		const clickTarget = e.target || e.srcElement;
+		const clickFigure = clickTarget.closest(this.selectors.FIGURE)
+			|| this.galleryElement;
+		const index = Array.from(this.figures).indexOf(clickFigure);
+		this.open(index, clickTarget);
 	}
 
-	_getItem(figure) {
-		// required elements
-		const link = figure.querySelector(this.structure.LINK);
-		const thumb = figure.querySelector(this.structure.THUMB);
+	parseFigure(figure) {
+		// required galleryElements
+		const link = figure.querySelector(this.selectors.LINK);
+		const thumb = figure.querySelector(this.selectors.THUMB);
 
 		// optional caption
-		const cap = figure.querySelector(this.structure.CAPTION);
+		const cap = figure.querySelector(this.selectors.CAPTION);
 		const size = link.getAttribute('data-size').split('x');
 
 		const item = {
@@ -228,39 +204,6 @@ export default class Photoswiper {
 		}
 		return item;
 	}
-	// a few helpers for keyboard accessibility
-	_manageFocus(pswp, triggerEl, pswpEl) {
-		// trap focus in the pswp element when it's active
-		new tabtrap(pswpEl);
-
-		// manage the idle state on tab press
-		let _idleTimer = 0;
-		pswpEl.addEventListener('keydown', (e) => {
-			const keyCode = e.which || e.keyCode || 0;
-			if (keyCode === 9) {
-				pswp.ui.setIdle(false);
-				clearTimeout(_idleTimer);
-
-				_idleTimer = setTimeout(() => {
-					pswp.ui.setIdle(true);
-				}, pswp.options.timeToIdle);
-			}
-		});
-
-		// return focus to the correct element on close
-		pswp.listen('close', () => {
-			const current = pswp.getCurrentIndex();
-			const currentFigure = this.element.querySelectorAll(this.structure.FIGURE)[current] || this.element;
-
-			if (this.element.contains(triggerEl) || !triggerEl) {
-				currentFigure.querySelector(this.structure.LINK).focus();
-			} else {
-				triggerEl.focus();
-			}
-		});
-	}
-
-
 	// static
 
 	static initAll(selector, config) {
