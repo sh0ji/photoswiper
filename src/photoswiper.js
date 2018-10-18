@@ -118,50 +118,61 @@ export default class Photoswiper {
 		this.enabled = !this.enabled;
 	}
 
+	open(index, triggerEl, fromUrl = false) {
+		const opts = { index, ...this.pswpOptions };
+		if (fromUrl) this.opts.showAnimationDuration = 0;
 
+		this.pswp = new PhotoSwipe(
+			this.pswpEl,
+			this.config.photoswipeUI,
+			this.items,
+			opts,
+		);
 
 	_getConfig(config) {
 		return Object.assign({},
 			Default,
 			config);
 	}
+		if (this.enabled) {
+			this.pswp.init();
+			this.isOpen = true;
 
+			if (typeof this.config.onOpen === 'function') {
+				this.config.onOpen.call(this, this.pswp);
 			}
 
+			// trap focus in the pswp galleryElement when it's active
+			new tabtrap(this.pswpEl);	// eslint-disable-line
 
+			// manage the idle state on tab press
+			let idleTimer = 0;
+			this.pswpEl.addEventListener('keydown', (e) => {
+				if (e.key === 'Tab') {
+					this.pswp.ui.setIdle(false);
+					clearTimeout(idleTimer);
 
+					idleTimer = setTimeout(() => {
+						this.pswp.ui.setIdle(true);
+					}, this.pswp.options.timeToIdle);
+				}
+			});
 
+			// return focus to the correct galleryElement on close
+			this.pswp.listen('close', () => {
+				const current = this.pswp.getCurrentIndex();
 
+				if (this.galleryElement.contains(triggerEl) || !triggerEl) {
+					this.figures[current].querySelector(this.selectors.LINK).focus();
+				} else {
+					triggerEl.focus();
+				}
+				this.isOpen = false;
+			});
 		}
+		return this.pswp;
 	}
 
-	_openPhotoSwipe(index, galleryEl, fromURL, triggerEl) {
-		if (!isValidPswp(galleryEl)) return;
-		const pswpEl = document.querySelector(this.structure.PSWP);
-		if (!pswpEl) {
-			throw new Error('Make sure to include the .pswp element on your page');
-		}
-
-		this.items = this._getItems(galleryEl);
-		this.options = this._getOptions(galleryEl);
-
-		this.options.index = parseInt(index, 10);
-
-		if (fromURL) {
-			this.options.showAnimationDuration = 0;
-			this.options.index = this._urlIndex(index);
-		}
-
-		if (isNaN(this.options.index)) return;
-
-		const pswp = new PhotoSwipe(pswpEl, this.config.photoswipeUI, this.items, this.options);
-		if (this.enabled) pswp.init();
-
-		this._manageFocus(pswp, triggerEl, pswpEl);
-
-		if (typeof this.config.onInit === 'function') {
-			this.config.onInit.call(pswp, pswp);
-		}
 	initListeners() {
 		this.figures.forEach((figure) => {
 			figure.querySelector(this.selectors.LINK)
