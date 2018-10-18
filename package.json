@@ -5,6 +5,7 @@
   "main": "dist/photoswiper.js",
   "scripts": {
     "build": "parcel build src/photoswiper.js",
+    "dev": "parcel examples/index.html",
     "lint": "eslint src",
     "prebuild": "rm -rf dist"
   },
