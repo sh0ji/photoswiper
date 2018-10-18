@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/sh0ji/photoswiper#readme",
   "dependencies": {
+    "lodash.merge": "^4.6.1",
     "photoswipe": "^4.1.1",
     "tabtrap": "^1.2.6"
   },

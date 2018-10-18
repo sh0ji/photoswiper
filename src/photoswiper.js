@@ -7,6 +7,7 @@
 import PhotoSwipe from 'photoswipe';
 import tabtrap from 'tabtrap';
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
+import merge from 'lodash.merge';
 import * as util from './util';
 
 /* CONSTANTS */
