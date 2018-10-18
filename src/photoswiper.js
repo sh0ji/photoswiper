@@ -16,9 +16,8 @@ const VERSION = '2.0.7';
 const DATA_KEY = 'photoswiper';
 
 const Default = {
-	bemRoot: null,
-	el: null,
-	onInit: null,
+	onInit: () => {},
+	onOpen: () => {},
 	photoswipeUI: PhotoSwipeUIDefault,
 	structure: {
 		PSWP: '.pswp',
