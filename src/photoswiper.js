@@ -19,7 +19,7 @@ const Default = {
 	onInit: () => {},
 	onOpen: () => {},
 	photoswipeUI: PhotoSwipeUIDefault,
-	structure: {
+	selectors: {
 		PSWP: '.pswp',
 		GALLERY: 'figure',
 		TITLE: 'figcaption',
@@ -31,6 +31,14 @@ const Default = {
 };
 
 /* CLASS DEFINITION */
+		if (config.structure && !config.selectors) {
+			process.emitWarning(
+				'The "structure" option has been renamed "selectors".\n'
+				+ '"structure" will be removed in a future update.',
+				'DeprecationWarning',
+			);
+			config.selectors = config.structure;	// eslint-disable-line
+		}
 
 class Photoswiper {
 	constructor(element, config) {
