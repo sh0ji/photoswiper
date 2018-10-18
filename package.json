@@ -7,7 +7,8 @@
     "build": "parcel build src/photoswiper.js",
     "dev": "parcel examples/index.html",
     "lint": "eslint src",
-    "prebuild": "rm -rf dist"
+    "prebuild": "rm -rf dist",
+    "preversion": "npm run build && git add dist"
   },
   "repository": {
     "type": "git",
