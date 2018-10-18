@@ -103,6 +103,32 @@ export default class Photoswiper {
 		return (gid) ? parseInt(gid, 10) : undefined;
 	}
 
+	get pswpOptions() {
+		const {
+			bemRoot,
+			onInit,
+			onOpen,
+			photoswipeUI,
+			selectors,
+			structure,
+			...pswpOptions
+		} = this.config;
+		return merge({}, pswpOptions, {
+			galleryUID: this.config.galleryUID || this.galleryElement.getAttribute('data-pswp-uid'),
+			getThumbBoundsFn: (index) => {
+				const thumb = this.items[index].el.querySelector(this.selectors.THUMB);
+				const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+				const rect = thumb.getBoundingClientRect();
+
+				return {
+					x: rect.left,
+					y: rect.top + pageYScroll,
+					w: rect.width,
+				};
+			},
+		});
+	}
+
 
 	// public
 
