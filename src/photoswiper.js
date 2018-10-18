@@ -7,6 +7,7 @@
 import PhotoSwipe from 'photoswipe';
 import tabtrap from 'tabtrap';
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
+import * as util from './util';
 
 /* CONSTANTS */
 
@@ -29,52 +30,6 @@ const Default = {
 		CAPTION: 'figcaption',
 	},
 };
-
-const parseArgs = (el, config) => {
-	const args = {};
-	switch (typeof el) {
-	case 'string':
-		// el was just a selector
-		args.elements = document.querySelectorAll(el);
-		break;
-	case 'object':
-		// already a NodeList
-		if (NodeList.prototype.isPrototypeOf(el)) {
-			args.elements = el;
-			// already an element
-		} else if (el.nodeType === 1) {
-			// gently coerce into a NodeList
-			el.setAttribute('nodeListCoercion');
-			const newEls = document.querySelectorAll('[nodeListCoercion]');
-			el.removeAttribute('nodeListCoercion');
-			args.elements = newEls;
-			// el is probably the config
-		} else if (config === undefined) {
-			args.elements = parseArgs(el.el).elements;
-			args.config = el;
-		}
-		break;
-	default:
-		throw new Error('Initialize with .init(selector, config)');
-	}
-	if (typeof config === 'object' && args.config === undefined) {
-		args.config = config;
-	}
-	return args;
-};
-
-const isValidPswp = (element) => {
-	const links = element.querySelectorAll('a');
-	// links exists
-	if (links.length > 0) {
-		for (const link of links) {
-			// and one of them has exactly one image inside it
-			if (link.querySelectorAll('img').length === 1) return true;
-		}
-	}
-	return false;
-};
-
 
 /* CLASS DEFINITION */
 
@@ -151,42 +106,6 @@ class Photoswiper {
 			bemSelectors);
 	}
 
-	_bemSelectors(block) {
-		return {
-			GALLERY: `.${block}`,
-			TITLE: `.${block}__title`,
-			FIGURE: `.${block}__figure`,
-			LINK: `.${block}__link`,
-			THUMB: `.${block}__thumbnail`,
-			CAPTION: `.${block}__caption`,
-		};
-	}
-
-	_parseHash(hash) {
-		const params = {};
-
-		if (hash.length < 5) {
-			return params;
-		}
-
-		const vars = hash.split('&');
-		for (let i = 0; i < vars.length; i++) {
-			if (!vars[i]) {
-				continue;
-			}
-			const pair = vars[i].split('=');
-			if (pair.length < 2) {
-				continue;
-			}
-			params[pair[0]] = pair[1];
-		}
-
-		if (params.gid) {
-			params.gid = parseInt(params.gid, 10);
-		}
-
-		return params;
-	}
 
 	_getPswpOptions() {
 		const opts = {};
@@ -330,21 +249,6 @@ class Photoswiper {
 					};
 				},
 			});
-	}
-
-	_urlIndex(index, items, galleryPIDs) {
-		if (galleryPIDs) {
-			// parse real index when custom PIDs are used
-			// http://photoswipe.com/documentation/faq.html#custom-pid-in-url
-			for (let i = 0; i < items.length; i++) {
-				if (items[i].pid == index) {
-					return i;
-				}
-			}
-		} else {
-			// in URL indexes start from 1
-			return parseInt(index, 10) - 1;
-		}
 	}
 
 	// a few helpers for keyboard accessibility
