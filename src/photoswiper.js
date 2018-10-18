@@ -160,11 +160,6 @@ export default class Photoswiper {
 			opts,
 		);
 
-	_getConfig(config) {
-		return Object.assign({},
-			Default,
-			config);
-	}
 		if (this.enabled) {
 			this.pswp.init();
 			this.isOpen = true;
