@@ -31,6 +31,9 @@ const Default = {
 };
 
 /* CLASS DEFINITION */
+export default class Photoswiper {
+	constructor(galleryElement, config) {
+		this.galleryElement = galleryElement;
 		if (config.structure && !config.selectors) {
 			process.emitWarning(
 				'The "structure" option has been renamed "selectors".\n'
@@ -39,27 +42,34 @@ const Default = {
 			);
 			config.selectors = config.structure;	// eslint-disable-line
 		}
+		this.config = merge({}, Photoswiper.Default, config);
 
-class Photoswiper {
-	constructor(element, config) {
-		this.element = element;
-		this.config = this._getConfig(config);
-		this.structure = this._getStructure();
-		this.pswpOptions = this._getPswpOptions();
+		if (util.isValidPswp(this.galleryElement)) {
+			// bind handlers
+			this.onClick = this.clickHandler.bind(this);
 
-		if (element && isValidPswp(element)) {
+			// create the selectors
+			const bemSelectors = (this.config.bemRoot) ? util.bemSelectors(this.config.bemRoot) : {};
+			this.selectors = merge({}, this.config.selectors, bemSelectors);
+
+			// collect figures and items
+			this.figures = this.galleryElement.querySelectorAll(this.selectors.FIGURE)
+				|| this.galleryElement;
+			this.items = Array.from(this.figures).map(fig => this.parseFigure(fig));
+
+			// add listeners to open on click
+			this.figures.forEach((figure) => {
+				figure.querySelector(this.selectors.LINK)
+					.addEventListener('click', this.onClick);
+			});
+
 			this.enabled = true;
 
-			// handle history parameters (#&gid=1&pid=1)
-			const windowHash = window.location.hash.substring(1);
-			const hashData = this._parseHash(windowHash);
-			if (hashData.pid && hashData.gid) {
-				this._openPhotoSwipe(hashData.pid, this.element, true);
+			if (typeof this.config.onInit === 'function') {
+				this.config.onInit.call(this, this.figures);
 			}
-
-			this._initListeners();
 		} else {
-			console.warn('Gallery figures must contain an anchor > image pair (a[href|data-href]>img[src]).\n', element);
+			throw new Error('Gallery elements must contain a linked image (a[href]>img[src]).\n', this.galleryElement);
 		}
 	}
 
