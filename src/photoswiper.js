@@ -92,6 +92,16 @@ export default class Photoswiper {
 		return Default;
 	}
 
+	static get pid() {
+		const pid = util.getUrlParam('pid');
+		return (pid) ? parseInt(pid, 10) : undefined;
+	}
+
+	static get gid() {
+		const gid = util.getUrlParam('gid');
+		return (gid) ? parseInt(gid, 10) : undefined;
+	}
+
 
 	// public
 
