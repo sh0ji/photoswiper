@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
   "main": "dist/photoswiper.js",
+  "module": "src/photoswiper.js",
   "scripts": {
     "build": "parcel build src/photoswiper.js",
     "dev": "parcel examples/index.html",
