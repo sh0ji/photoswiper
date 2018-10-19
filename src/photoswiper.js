@@ -216,12 +216,10 @@ export default class Photoswiper {
 	}
 
 	parseFigure(figure) {
-		// required galleryElements
-		const link = figure.querySelector(this.selectors.LINK);
-		const thumb = figure.querySelector(this.selectors.THUMB);
+		const link = figure.querySelector(this.selectors.LINK);		// required
+		const thumb = figure.querySelector(this.selectors.THUMB);	// required
+		const cap = figure.querySelector(this.selectors.CAPTION);	// optional
 
-		// optional caption
-		const cap = figure.querySelector(this.selectors.CAPTION);
 		const size = link.getAttribute('data-size').split('x');
 
 		const item = {
