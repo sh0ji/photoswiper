@@ -54,8 +54,8 @@ export default class Photoswiper {
 			this.selectors = merge({}, this.config.selectors, bemSelectors);
 
 			// collect figures and items
-			this.figures = this.galleryElement.querySelectorAll(this.selectors.FIGURE)
-				|| this.galleryElement;
+			const figures = this.galleryElement.querySelectorAll(this.selectors.FIGURE);
+			this.figures = (figures.length) ? figures : [this.galleryElement];
 			this.items = Array.from(this.figures).map(fig => this.parseFigure(fig));
 
 			// add listeners to open on click
