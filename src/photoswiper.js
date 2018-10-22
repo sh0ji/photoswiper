@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
- * Photoswiper (v2.0.7): photoswiper.js
+ * Photoswiper
  * by Evan Yamanishi
  * Licensed under GPL-3.0
  * -------------------------------------------------------------------------- */
@@ -9,12 +9,6 @@ import tabtrap from 'tabtrap';
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
 import merge from 'lodash.merge';
 import * as util from './util';
-
-/* CONSTANTS */
-
-const NAME = 'photoswiper';
-const VERSION = '2.0.7';
-const DATA_KEY = 'photoswiper';
 
 const Default = {
 	onInit: () => {},
@@ -76,18 +70,6 @@ export default class Photoswiper {
 
 
 	// getters
-
-	static get NAME() {
-		return NAME;
-	}
-
-	static get VERSION() {
-		return VERSION;
-	}
-
-	static get DATA_KEY() {
-		return DATA_KEY;
-	}
 
 	static get Default() {
 		return Default;
