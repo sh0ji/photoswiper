@@ -7,10 +7,10 @@ module.exports = {
 		file: 'dist/photoswiper.browser.js',
 		format: 'umd',
 		sourcemap: true,
-		name: 'photoswiper'
+		name: 'photoswiper',
 	},
 	plugins: [
 		resolve(),
 		commonjs(),
-	]
-}
+	],
+};
