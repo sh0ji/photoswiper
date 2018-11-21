@@ -5,9 +5,7 @@
   "browser": "dist/photoswiper.browser.js",
   "main": "dist/photoswiper.js",
   "scripts": {
-    "build": "npm run build:browser && npm run build:node",
-    "build:browser": "rollup --config rollup.config.browser.js",
-    "build:node": "rollup --config rollup.config.node.js",
+    "build": "rollup --config",
     "lint": "eslint src",
     "prebuild": "rm -rf dist",
     "preversion": "npm run build && git add dist"
