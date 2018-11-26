@@ -5,10 +5,7 @@
   "browser": "dist/photoswiper.browser.js",
   "main": "dist/photoswiper.js",
   "scripts": {
-    "build": "npm run build:browser && npm run build:node",
-    "build:browser": "parcel build src/photoswiper.js --global Photoswiper --out-file photoswiper.browser.js",
-    "build:node": "parcel build src/photoswiper.js --target node",
-    "dev": "parcel examples/index.html",
+    "build": "rollup --config",
     "lint": "eslint src",
     "prebuild": "rm -rf dist",
     "preversion": "npm run build && git add dist"
@@ -39,6 +36,9 @@
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "parcel-bundler": "^1.10.3"
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0"
   }
 }
