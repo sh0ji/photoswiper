@@ -4,8 +4,8 @@
 
 ## Usage
 
-Photoswiper comes with two versions: a [Node.js version](blob/master/dist/photoswiper.js) and a [standalone version that can be used in the browser](blob/master/dist/photoswiper.browser.js).
-Both will automatically set up event listeners to open the PhotoSwipe instance on click.
+Photoswiper comes with three versions: a [Node.js version](blob/master/dist/photoswiper.cjs.js), an [ES module version](blob/master/dist/photoswiper.esm.js), and a [standalone version that can be used in the browser](blob/master/dist/photoswiper.umd.js).
+All versions will automatically set up event listeners to open the PhotoSwipe instance on click.
 
 ### Node
 
@@ -14,6 +14,30 @@ Both will automatically set up event listeners to open the PhotoSwipe instance o
 
 ```javascript
 const Photoswiper = require('photoswiper');
+
+const myGallery = new Photoswiper(document.getElementById('my-gallery'));
+```
+
+### ES Module
+
+1. Add the script to your document
+1. Import it and instantiate Photoswiper
+
+```html
+<html lang="en">
+  <head>
+    <!-- ...other head stuff... -->
+    <script src="scripts/photoswiper.esm.js" type="module"></script>
+    <script src="scripts/main.js" type="module"></script>
+  </head>
+  <!-- ...body... -->
+</html>
+```
+
+Main.js:
+
+```javascript
+import Photoswiper from './scripts/photoswiper.esm.js';
 
 const myGallery = new Photoswiper(document.getElementById('my-gallery'));
 ```
@@ -27,7 +51,7 @@ const myGallery = new Photoswiper(document.getElementById('my-gallery'));
 <html lang="en">
   <head>
     <!-- ...other head stuff... -->
-    <script src="scripts/photoswiper.browser.js" defer></script>
+    <script src="scripts/photoswiper.umd.js" defer></script>
     <script src="scripts/main.js" defer></script>
   </head>
   <!-- ...body... -->
