@@ -2,13 +2,15 @@
   "name": "photoswiper",
   "version": "3.0.3",
   "description": "A plugin for easy and accessible PhotoSwipe initialization",
-  "browser": "dist/photoswiper.browser.js",
-  "main": "dist/photoswiper.js",
+  "browser": "dist/photoswiper.umd.js",
+  "main": "dist/photoswiper.cjs.js",
+  "module": "dist/photoswiper.esm.js",
   "scripts": {
     "build": "rollup --config",
+    "dev": "npm run build -- --sourcemap --watch",
     "lint": "eslint src",
     "prebuild": "rm -rf dist",
-    "preversion": "npm run build && git add dist"
+    "release": "standard-version --commit-all --sign"
   },
   "repository": {
     "type": "git",
@@ -39,9 +41,17 @@
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "rollup": "^0.67.3",
+    "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0"
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.4",
+    "standard-version": "^4.4.0"
+  },
+  "standard-version": {
+    "scripts": {
+      "prerelease": "npm run lint -- --fix",
+      "postbump": "NODE_ENV=production npm run build && git add dist"
+    }
   }
 }
