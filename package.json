@@ -19,8 +19,11 @@
     "accessibility",
     "a11y"
   ],
-  "author": "Evan Yamanishi",
-  "license": "GPL-3.0",
+  "author": {
+    "name": "Evan Yamanishi",
+    "email": "yamanishi1@gmail.com"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sh0ji/photoswiper/issues"
   },
