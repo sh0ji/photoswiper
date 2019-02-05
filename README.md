@@ -1,72 +1,163 @@
 # Photoswiper
-An plugin for easy and accessible [PhotoSwipe](http://photoswipe.com/) initialization. Works with or without jQuery.
+
+> An plugin for easy and accessible [PhotoSwipe](http://photoswipe.com/) initialization.
 
 ## Usage
-Photoswiper comes with two versions: a module version that can be required and a standalone version that can be used in the browser. The easiest way to initialize Photoswiper is with jQuery or the `.initAll()` method.
 
-With jQuery `$(selector).photoswiper([options])`
+Photoswiper comes with three versions: a [Node.js version](blob/master/dist/photoswiper.cjs.js), an [ES module version](blob/master/dist/photoswiper.esm.js), and a [standalone version that can be used in the browser](blob/master/dist/photoswiper.umd.js).
+All versions will automatically set up event listeners to open the PhotoSwipe instance on click.
+
+### Node
+
+1. Import Photoswiper
+2. Instantiate Photoswiper with a [gallery element](http://photoswipe.com/documentation/getting-started.html#dom-to-slide-objects)
+
 ```javascript
-$('.pswp-gallery').photoswipe()
+const Photoswiper = require('photoswiper');
+
+const myGallery = new Photoswiper(document.getElementById('my-gallery'));
 ```
 
-Without jQuery `photoswiper.initAll(selector[, options])`
-```javascript
-photoswiper.initAll('.pswp-gallery')
+### ES Module
+
+1. Add the script to your document
+1. Import it and instantiate Photoswiper
+
+```html
+<html lang="en">
+  <head>
+    <!-- ...other head stuff... -->
+    <script src="scripts/photoswiper.esm.js" type="module"></script>
+    <script src="scripts/main.js" type="module"></script>
+  </head>
+  <!-- ...body... -->
+</html>
 ```
-It can also be initialized without jQuery or `.initAll()`, but with one significant difference: the supplied element must be an actual element (`nodeType === 1`).
 
-`photoswiper(element[, options])`
+Main.js:
+
 ```javascript
-// initialize one gallery
-let myGallery = document.querySelector('.pswp-gallery')
-photoswiper(myGallery)
+import Photoswiper from './scripts/photoswiper.esm.js';
 
-// initialize all the galleries
-let myGalleries = document.querySelectorAll('.pswp-gallery')
-for (let gallery of myGalleries) {
-    photoswiper(gallery)
+const myGallery = new Photoswiper(document.getElementById('my-gallery'));
+```
+
+### Browser
+
+1. Add the script to your document
+2. Instantiate Photoswiper with a [gallery element](http://photoswipe.com/documentation/getting-started.html#dom-to-slide-objects)
+
+```html
+<html lang="en">
+  <head>
+    <!-- ...other head stuff... -->
+    <script src="scripts/photoswiper.umd.js" defer></script>
+    <script src="scripts/main.js" defer></script>
+  </head>
+  <!-- ...body... -->
+</html>
+```
+
+Main.js:
+
+```javascript
+"use strict"
+
+var myGallery = new Photoswiper(document.getElementById('my-gallery'));
+```
+
+## API
+
+A few helpful hooks are available on the Photoswiper instance.
+
+### \#disable()
+
+Disable the event listeners so that the PhotoSwipe instance isn't triggered on click.
+
+### \#enable()
+
+Enable the event listeners so that the PhotoSwipe instance is triggered on click.
+Note that this is automatically set during instantiation.
+You only need to call it if you've explicitly disabled the instance.
+
+### \#toggle()
+
+Switch between enabled/disabled.
+
+### \#open(index: number, triggerEl: HTMLElement, fromUrl: boolean = false)
+
+Open the PhotoSwipe instance. This is what is called on click.
+
+For example, you can use this to open the PhotoSwipe instance when clicking another element:
+
+```javascript
+// this assumes a button with aria-controls:
+// <button id="some-button" aria-controls="id-of-pswp-item">...</button>
+// and a gallery item with a data-pid corresponding to its index in the gallery:
+// <figure id="id-of-pswp-item" data-pid="2">...</figure>
+
+const triggerBtn = document.getElementById('some-button');
+triggerBtn.onclick = function openRelated() {
+  const related = document.getElementById(this.getAttribute('aria-controls'));
+  const i = parseInt(related.getAttribute('data-pid'), 10);
+  myGallery.open(i, this);
 }
 ```
 
 ## Options
+
 Photoswiper provides a few extra options in addition to [all the PhotoSwipe options](http://photoswipe.com/documentation/options.html).
 
 | Option | Type | Default |
 | ---- | ---- | ---- |
-| `bemRoot` | `string` | `null` |
-| `el` | `string` or `object` | `null` |
-| `onInit` | `function` | `null` |
-| `PhotoSwipeUI` | `object` | The [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js). |
-| `structure` | `object` | See the [Structure](#structure) documentation. |
+| `bemRoot` | `string` | undefined |
+| `onInit` | `function` | noop |
+| `onOpen` | `function` | noop |
+| `PhotoSwipeUI` | `function` | The [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js). |
+| `selectors` | `object` | See the [Selectors](#selectors) documentation. |
 
 * `bemRoot`
-Use this to customize your selectors according to BEM [BEM](https://css-tricks.com/bem-101/). For instance, passing `myImages` would cause the figure element selector to become `.myImages__figure` instead of `.pswp-gallery__figure`.
 
-* `el`
-Use this if you'd rather supply the element inside the config. It can be a valid CSS selector string, a direct reference to an element (e.g. `document.getElementById('myGallery')`), or a node list that you already created (e.g. `document.querySelectorAll('.pswp-gallery')`).
+Use this to customize your [selectors](#selectors) according to BEM [BEM](https://css-tricks.com/bem-101/) conventions. For instance, passing `myImages` would cause the figure element selector to become `.myImages__figure` instead of `.pswp-gallery__figure`.
+
+* `onInit(figures: NodeList)`
+
+This is called at the end of Photoswiper construction, but before the PhotoSwipe gallery has been opened.
+Note that PhotoSwipe has [an onInit](http://photoswipe.com/documentation/api.html) hook that is called when the PhotoSwipe instance opens.
+
 ```javascript
-photoswiper.initAll({ el: '.pswp-gallery' })
+const myGallery = new Photoswiper(galleryEl, {
+  onInit(figures) {
+    // do something with the list of figures, such as setting data-pid indices
+    figures.forEach((figure, i) => {
+      figure.setAttribute('data-pid', i);
+    });
+  },
+});
 ```
-* `onInit`
-This will be called with the PhotoSwipe instance context when the gallery is initialized. Use it to bind additional [PhotoSwipe API functions](http://photoswipe.com/documentation/api.html). Access the PhotoSwipe instance with either `this` or the first argument `(arg) => {}`.
+
+* `onOpen(pswp: PhotoSwipe instance)`
+
+This is called when PhotoSwipe opens. It corresponds to PhotoSwipe's own `onInit` hook.
+
 ```javascript
-{
-    onInit: function(pswp) {
-        // (this === pswp == PhotoSwipe instance)
-        this.listen('afterChange', () => {
-            alert('The image changed! But you probably knew that already...')
-        })
-    }
-}
+const myGallery = new Photoswiper(galleryEl, {
+  onOpen(pswp) {
+    // do something with the photoswipe instance
+    console.log(pswp);
+  },
+});
 ```
+
 * `photoswipeUI`
-Specify your PhotoSwipe ui object here. Defaults to the [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js), so you don't need to supply that.
 
-* `structure`
-Specify selectors for the structure of your gallery.
+Specify your PhotoSwipe ui function here. Defaults to the [default PhotoSwipe UI](https://github.com/dimsemenov/PhotoSwipe/blob/master/src/js/ui/photoswipe-ui-default.js).
 
-## Structure
-Photoswiper defaults to semantic element selectors, but all selectors can be explicitly overriden. Optionally use [BEM](https://css-tricks.com/bem-101/) by supplying a `bemRoot` class name in the options (e.g. `{ bemRoot: 'pswp-gallery'}`).
+### Selectors
+
+> NOTE: this was renamed from "Structure" in v3.0
+
+Photoswiper defaults to semantic element selectors, but all selectors can be explicitly overriden. Optionally use [BEM](https://css-tricks.com/bem-101/) by supplying a `bemRoot` class name in the options (e.g. `{ bemRoot: 'pswp-gallery' }`).
 Elements include:
 
 | Option Name | Default | BEM Output | Description |
@@ -79,8 +170,14 @@ Elements include:
 | **CAPTION** | `figcaption` | `.${bemRoot}__caption` | Captions for each image. |
 | **PSWP** | `.pswp` | N/A | The [PhotoSwipe element](http://photoswipe.com/documentation/getting-started.html). |
 
-### Example
-`{ bemRoot: 'pswp-gallery' }`
+#### Example Markup
+
+This example assumes a `bemRoot` of "pswp-gallery":
+
+```javascript
+const myGallery = new Photoswiper(galleryEl, { bemRoot: 'pswp-gallery' });
+```
+
 ```html
 <figure class="pswp-gallery">
   <figcaption class="pswp-gallery__title">Kittens</figcaption>
@@ -91,53 +188,8 @@ Elements include:
     <figcaption class="pswp-gallery__caption">Kittens are tiny cats.</figcaption>
   </figure>
 </figure>
-```
+<!-- ...other content... -->
 
-
-## Methods
-
-`$.photoswiper(options)` or
-```javascript
-// jQuery
-$('.pswp-gallery').photoswiper({
-    history: 'false',       // PhotoSwipe option
-    bgOpacity: .7,          // PhotoSwipe option
-    structure: {
-        FIGURE: '.myFigure' // Override default
-    }
-})
-
-// Create a new class without jQuery
-let myGallery = document.getElementById('myGallery')
-let pswpr = new photoswiper({
-    el: myGallery,          // Must be a single element
-    bemRoot: 'pswp-gallery'
-})
-```
-
-`enable()`
-```javascript
-// jQuery
-$('.pswp-gallery').photoswiper('enable')
-
-// no jQuery (the class has already been initialized)
-pswpr.enable()
-```
-
-`disable()`
-```javascript
-// jQuery
-$('.pswp-gallery').photoswiper('disable')
-
-// no jQuery (the class has already been initialized)
-pswpr.disable()
-```
-
-`toggle()`
-```javascript
-// jQuery
-$('.pswp-gallery').photoswiper('toggle')
-
-// no jQuery (the class has already been initialized)
-pswpr.toggle()
+<!-- http://photoswipe.com/documentation/getting-started.html#init-add-pswp-to-dom -->
+<div class="pswp">...</div>
 ```
