@@ -36,7 +36,7 @@ export default [
 			'tabtrap',
 			'lodash.merge',
 			'photoswipe',
-			'photoswipe/dist/photoswipe-ui-default'
+			'photoswipe/dist/photoswipe-ui-default',
 		],
 		plugins: [
 			babel({
@@ -59,7 +59,7 @@ export default [
 		input: 'src/photoswiper.js',
 		plugins: [
 			resolve(),
-    		commonjs(),
+			commonjs(),
 			babel({
 				// https://caniuse.com/#feat=es6-module
 				presets: [['airbnb', {
@@ -89,7 +89,7 @@ export default [
 		input: 'src/photoswiper.js',
 		plugins: [
 			resolve(),
-    		commonjs(),
+			commonjs(),
 			babel({ presets: ['airbnb'] }),
 			(prod) ? terser(terserOpts) : null,
 		],
