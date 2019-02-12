@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rollup --config",
     "dev": "npm run build -- --sourcemap --watch",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "prebuild": "rm -rf dist",
     "release": "standard-version --commit-all --sign"
   },
